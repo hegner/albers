@@ -1,6 +1,7 @@
 {% import "macros/utils.jinja2" as utils %}
 {% import "macros/collections.jinja2" as macros %}
 {% from "macros/iterator.jinja2" import iterator_declaration %}
+{% from "macros/iterator.jinja2" import reverse_iterator_declaration %}
 // AUTOMATICALLY GENERATED FILE - DO NOT EDIT
 
 #ifndef {{ package_name.upper() }}_{{ class.bare_type }}Collection_H
@@ -30,13 +31,18 @@
 #include <ostream>
 #include <mutex>
 #include <memory>
+#if __has_include(<ranges>)
+#  include <ranges>
+#endif
 
 {{ utils.namespace_open(class.namespace) }}
 
 
 {{ iterator_declaration(class) }}
+{{ reverse_iterator_declaration(class) }}
 
 {{ iterator_declaration(class, prefix='Mutable') }}
+{{ reverse_iterator_declaration(class, prefix='Mutable') }}
 
 /**
 A Collection is identified by an ID.
@@ -45,8 +51,19 @@ class {{ class.bare_type }}Collection : public podio::CollectionBase {
 public:
   using const_iterator = {{ class.bare_type }}CollectionIterator;
   using iterator = {{ class.bare_type }}MutableCollectionIterator;
+  using const_reverse_iterator = {{ class.bare_type }}CollectionReverseIterator;
+  using reverse_iterator = {{ class.bare_type }}MutableCollectionReverseIterator;
 
   {{ class.bare_type }}Collection();
+  #if __cpp_lib_ranges
+  {{ class.bare_type }}Collection(std::ranges::input_range auto&& range)
+  requires(std::convertible_to<std::ranges::range_value_t<decltype(range)>, {{ class.bare_type }}>)
+  : m_isValid(false), m_isPrepared(false), m_isSubsetColl(false), m_collectionID(0), m_storage() {
+    for (auto&& item : range) {
+      push_back(item);
+    }
+  };
+  #endif
   // This is a move-only type
   {{ class.bare_type }}Collection(const {{ class.bare_type}}Collection& ) = delete;
   {{ class.bare_type }}Collection& operator=(const {{ class.bare_type}}Collection& ) = delete;
@@ -124,17 +141,41 @@ public:
   }
 
   // support for the iterator protocol
-  iterator begin() {
+  iterator begin() noexcept {
     return iterator(0, &m_storage.entries);
   }
-  const_iterator begin() const {
+  const_iterator cbegin() const noexcept {
     return const_iterator(0, &m_storage.entries);
   }
-  iterator end() {
+  const_iterator begin() const noexcept {
+    return const_iterator(0, &m_storage.entries);
+  }
+  reverse_iterator rbegin() noexcept {
+    return reverse_iterator(m_storage.entries.size() - 1, &m_storage.entries);
+  }
+  const_reverse_iterator crbegin() const noexcept {
+    return const_reverse_iterator(m_storage.entries.size() - 1, &m_storage.entries);
+  }
+  const_reverse_iterator rbegin() const noexcept {
+    return const_reverse_iterator(m_storage.entries.size() - 1, &m_storage.entries);
+  }
+  iterator end() noexcept {
     return iterator(m_storage.entries.size(), &m_storage.entries);
   }
-  const_iterator end() const {
+  const_iterator cend() const noexcept {
     return const_iterator(m_storage.entries.size(), &m_storage.entries);
+  }
+  const_iterator end() const noexcept {
+    return const_iterator(m_storage.entries.size(), &m_storage.entries);
+  }
+  reverse_iterator rend() noexcept {
+    return reverse_iterator(-1, &m_storage.entries);
+  }
+  const_reverse_iterator crend() const noexcept {
+    return const_reverse_iterator(-1, &m_storage.entries);
+  }
+  const_reverse_iterator rend() const noexcept {
+    return const_reverse_iterator(-1, &m_storage.entries);
   }
 
 {% for member in Members %}

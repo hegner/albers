@@ -65,7 +65,9 @@ If asking for an entry outside bounds, a std::out_of_range exception is thrown.
 
 
 ### Looping through Collections
-Looping through collections is supported in two ways. Via iterators:
+Looping through collections is supported in several ways.
+
+Via iterators:
 
 ```cpp
     for(auto i = hits.begin(), end = hits.end(); i != end; ++i) {
@@ -73,12 +75,42 @@ Looping through collections is supported in two ways. Via iterators:
     }
 ```
 
-and via direct object access:
+Via direct object access:
 
 ```cpp
     for(int i = 0, end = hits.size(), i != end, ++i){
       std::cout << hit[i].energy() << std::endl;
     }
+```
+
+Via ranged for loops:
+
+```cpp
+    for(auto hit: hits) {
+      std::cout << hit.energy() << std::endl;
+    }
+```
+
+Via `std::for_each`:
+
+```cpp
+    std::for_each(hits.begin(), hits.end(), [](const auto& hit) {
+      std::cout << hit.energy() << std::endl;
+    });
+```
+
+Via C++20 ranges and views:
+
+```cpp
+    auto is_electron = [](const auto& p){ return p.PDG() == 11; };
+    for (auto hit: hits | std::views::filter(is_electron)) {
+      std::cout << hit.energy() << std::endl;
+    }
+```
+
+Note, however, that writing to collections from iterators is not expected to work:
+```cpp
+    std::fill(hits.begin(), hits.end(), Hit()); // bad! iterator lvalues do not modify collection!
 ```
 
 ### Support for Notebook-Pattern

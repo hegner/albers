@@ -1,6 +1,6 @@
 {% import "macros/utils.jinja2" as utils %}
 {% import "macros/collections.jinja2" as macros %}
-{% from "macros/iterator.jinja2" import iterator_definitions %}
+{% from "macros/iterator.jinja2" import iterator_definitions, reverse_iterator_definitions %}
 // AUTOMATICALLY GENERATED FILE - DO NOT EDIT
 
 #include "{{ incfolder }}{{ class.bare_type }}Collection.h"
@@ -160,6 +160,10 @@ void to_json(nlohmann::json& j, const {{ collection_type }}& collection) {
 {{ iterator_definitions(class) }}
 
 {{ iterator_definitions(class, prefix='Mutable' ) }}
+
+{{ reverse_iterator_definitions(class) }}
+
+{{ reverse_iterator_definitions(class, prefix='Mutable' ) }}
 
 {{ macros.ostream_operator(class, Members, OneToOneRelations, OneToManyRelations, VectorMembers, use_get_syntax, ostream_collection_settings) }}
 

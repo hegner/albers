@@ -2,18 +2,41 @@
 {% with iterator_type = class.bare_type + prefix + 'CollectionIterator' %}
 class {{ iterator_type }} {
 public:
-  {{ iterator_type }}(size_t index, const {{ class.bare_type }}ObjPointerContainer* collection) : m_index(index), m_object(nullptr), m_collection(collection) {}
+  using difference_type = std::ptrdiff_t;
+  using value_type = {{ prefix }}{{ class.bare_type }};
+  using pointer = {{ prefix }}{{ class.bare_type }}*;
+  using reference = {{ prefix }}{{ class.bare_type }}&;
+  using iterator_category = std::input_iterator_tag;
 
-  {{ iterator_type }}(const {{ iterator_type }}&) = delete;
-  {{ iterator_type }}& operator=(const {{ iterator_type }}&) = delete;
+  {{ iterator_type }}()
+    : m_index(0), m_object(nullptr), m_collection(nullptr) {};
+  {{ iterator_type }}(size_t index, const {{ class.bare_type }}ObjPointerContainer* collection)
+    : m_index(index), m_object(nullptr), m_collection(collection) {};
+
+  {{ iterator_type }}(const {{ iterator_type }}&) = default;
+  {{ iterator_type }}& operator=(const {{ iterator_type }}&) = default;
 
   bool operator!=(const {{ iterator_type}}& x) const {
     return m_index != x.m_index; // TODO: may not be complete
   }
+  bool operator==(const {{ iterator_type}}& x) const {
+    return !operator!=(x);
+  }
 
-  {{ prefix }}{{ class.bare_type }} operator*();
+  {{ prefix }}{{ class.bare_type }} operator*() const;
   {{ prefix }}{{ class.bare_type }}* operator->();
   {{ iterator_type }}& operator++();
+  {{ iterator_type }} operator++(int) {
+    {{ iterator_type }} temp = *this;
+    ++*this;
+    return temp;
+  };
+  {{ iterator_type }}& operator--();
+  {{ iterator_type }} operator--(int) {
+    {{ iterator_type }} temp = *this;
+    --*this;
+    return temp;
+  };
 
 private:
   size_t m_index;
@@ -23,12 +46,58 @@ private:
 {% endwith %}
 {% endmacro %}
 
+{% macro reverse_iterator_declaration(class, prefix='') %}
+{% with iterator_type = class.bare_type + prefix + 'CollectionReverseIterator' %}
+class {{ iterator_type }} {
+public:
+  using difference_type = std::ptrdiff_t;
+  using value_type = {{prefix}}{{ class.bare_type }};
+  using pointer = {{prefix}}{{ class.bare_type }}*;
+  using reference = {{prefix}}{{ class.bare_type }}&;
+  using iterator_category = std::input_iterator_tag;
+
+  {{ iterator_type }}()
+    : m_index(0), m_object(nullptr), m_collection(nullptr) {};
+  {{ iterator_type }}(size_t index, const {{ class.bare_type }}ObjPointerContainer* collection)
+    : m_index(index), m_object(nullptr), m_collection(collection) {};
+
+  {{ iterator_type }}(const {{ iterator_type }}&) = default;
+  {{ iterator_type }}& operator=(const {{ iterator_type }}&) = default;
+
+  bool operator!=(const {{ iterator_type }}& x) const {
+    return m_index != x.m_index; // TODO: may not be complete
+  }
+  bool operator==(const {{ iterator_type }}& x) const {
+    return !operator!=(x);
+  }
+
+  {{ prefix }}{{ class.bare_type }} operator*() const;
+  {{ prefix }}{{ class.bare_type }}* operator->();
+  {{ iterator_type }}& operator++();
+  {{ iterator_type }} operator++(int) {
+    {{ iterator_type }} temp = *this;
+    ++*this;
+    return temp;
+  };
+  {{ iterator_type }}& operator--();
+  {{ iterator_type }} operator--(int) {
+    {{ iterator_type }} temp = *this;
+    --*this;
+    return temp;
+  };
+
+private:
+  size_t m_index;
+  {{ prefix }}{{ class.bare_type }} m_object;
+  const {{ class.bare_type }}ObjPointerContainer* m_collection;
+};
+{% endwith %}
+{% endmacro %}
 
 {% macro iterator_definitions(class, prefix='') %}
 {% with iterator_type = class.bare_type + prefix + 'CollectionIterator' %}
-{{ prefix }}{{ class.bare_type }} {{ iterator_type }}::operator*() {
-  m_object.m_obj = (*m_collection)[m_index];
-  return m_object;
+{{ prefix }}{{ class.bare_type }} {{ iterator_type }}::operator*() const {
+  return {(*m_collection)[m_index]};
 }
 
 {{ prefix }}{{ class.bare_type }}* {{ iterator_type }}::operator->() {
@@ -41,5 +110,32 @@ private:
   return *this;
 }
 
+{{ iterator_type }}& {{ iterator_type }}::operator--() {
+  --m_index;
+  return *this;
+}
+{% endwith %}
+{% endmacro %}
+
+{% macro reverse_iterator_definitions(class, prefix='') %}
+{% with iterator_type = class.bare_type + prefix + 'CollectionReverseIterator' %}
+{{ prefix }}{{ class.bare_type }} {{ iterator_type }}::operator*() const {
+  return {(*m_collection)[m_index]};
+}
+
+{{ prefix }}{{ class.bare_type }}* {{ iterator_type }}::operator->() {
+  m_object.m_obj = (*m_collection)[m_index];
+  return &m_object;
+}
+
+{{ iterator_type }}& {{ iterator_type }}::operator++() {
+  --m_index;
+  return *this;
+}
+
+{{ iterator_type }}& {{ iterator_type }}::operator--() {
+  ++m_index;
+  return *this;
+}
 {% endwith %}
 {% endmacro %}
