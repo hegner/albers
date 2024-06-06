@@ -1,4 +1,5 @@
 #include "argparseUtils.h"
+#include "tabulate.h"
 
 #include "podio/Frame.h"
 #include "podio/Reader.h"
@@ -10,6 +11,7 @@
 #include <iterator>
 #include <numeric>
 #include <string>
+#include <tuple>
 
 struct ParsedArgs {
   std::string inputFile{};
@@ -152,8 +154,9 @@ void printGeneralInfo(const podio::Reader& reader, const std::string& filename) 
 
   std::cout << "Frame categories in this file:\nName\tEntries\n";
 
+  std::vector<std::tuple<std::string, size_t>> rows{};
   for (const auto& cat : reader.getAvailableCategories()) {
-    std::cout << cat << "\t" << reader.getEntries(std::string(cat)) << '\n';
+    rows.emplace_back(cat, reader.getEntries(std::string(cat)));
   }
 }
 
