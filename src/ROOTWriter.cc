@@ -33,7 +33,7 @@ void ROOTWriter::writeFrame(const podio::Frame& frame, const std::string& catego
   // been initialized
   if (catInfo.tree == nullptr) {
     catInfo.idTable = frame.getCollectionIDTableForWrite();
-    catInfo.collsToWrite = root_utils::sortAlphabeticaly(collsToWrite);
+    catInfo.collsToWrite = podio::utils::sortAlphabeticaly(collsToWrite);
     catInfo.tree = new TTree(category.c_str(), (category + " data tree").c_str());
     catInfo.tree->SetDirectory(m_file.get());
   }
