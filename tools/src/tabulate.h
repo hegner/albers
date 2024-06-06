@@ -11,6 +11,10 @@ void printTable(const std::vector<std::tuple<Types...>>& rows, const std::vector
   const auto nCols = rows[0].size();
   // First figure out how large each column has to be to fit all the content
   std::vector<size_t> colWidths{0, nCols};
+
+  std::vector<std::vector<std::string>> stringRows;
+  stringRows.reserve(rows.size());
+
   for (size_t i = 0; i < nCols; ++i) {
     colWidths[i] = headers[i].size();
   }

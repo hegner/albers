@@ -200,6 +200,9 @@ if(BUILD_TESTING)
   include(cmake/podioTest.cmake)
   add_subdirectory(tests)
 endif()
+
+find_package(fmt REQUIRED)
+
 add_subdirectory(tools)
 add_subdirectory(python)
 
