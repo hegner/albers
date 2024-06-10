@@ -1,24 +1,11 @@
 #include <fmt/core.h>
 
 #include <algorithm>
-#include <iomanip>
 #include <iostream>
 #include <iterator>
 #include <string>
 #include <tuple>
-#include <type_traits>
 #include <vector>
-
-std::string rowFormatString(const std::vector<size_t>& colWidths) {
-  std::string rowFmt = "";
-  rowFmt.reserve(colWidths.size() * 6); // heuristic working for columns that are 2 digit numbers wide
-
-  for (const auto w : colWidths) {
-    rowFmt.append(fmt::format("{{:<{}}}", w));
-  }
-
-  return rowFmt;
-}
 
 template <typename... Types>
 void printTable(const std::vector<std::tuple<Types...>>& rows, const std::vector<std::string>& headers) {
