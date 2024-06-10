@@ -153,7 +153,6 @@ void getParameterOverview(const podio::Frame& frame, std::vector<std::tuple<std:
 }
 
 void printFrameOverview(const podio::Frame& frame) {
-
   fmt::print("Collections:\n");
   const auto collNames = frame.getAvailableCollections();
 
@@ -176,6 +175,27 @@ void printFrameOverview(const podio::Frame& frame) {
   printTable(paramRows, {"Name", "Type", "Elements"});
 }
 
+template <typename... Args>
+void print_flush(fmt::format_string<Args...> fmtstr, Args&&... args) {
+  fmt::print(fmtstr, std::forward<Args>(args)...);
+  std::fflush(stdout);
+}
+
+void printFrameDetailed(const podio::Frame& frame) {
+  fmt::print("Collections:\n");
+  const auto collNames = frame.getAvailableCollections();
+  for (const auto& name : podio::utils::sortAlphabeticaly(collNames)) {
+    const auto coll = frame.get(name);
+    print_flush("{}\n", name);
+    coll->print();
+    print_flush("\n");
+  }
+
+  print_flush("\nParameters\n:");
+  frame.getParameters().print();
+  print_flush("\n");
+}
+
 void printGeneralInfo(const podio::Reader& reader, const std::string& filename) {
   fmt::print("input file: {}\n", filename);
   fmt::print("datamodel model definitions stored in this file: {}\n\n", reader.getAvailableDatamodels());
@@ -191,7 +211,7 @@ void printGeneralInfo(const podio::Reader& reader, const std::string& filename) 
 void printFrame(const podio::Frame& frame, const std::string& category, size_t iEntry, bool detailed) {
   fmt::print("{:#^82}\n", fmt::format(" {}: {} ", category, iEntry));
   if (detailed) {
-
+    printFrameDetailed(frame);
   } else {
     printFrameOverview(frame);
   }
