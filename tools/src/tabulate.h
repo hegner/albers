@@ -13,7 +13,7 @@ void printTable(const std::vector<std::tuple<Types...>>& rows, const std::vector
   const auto nCols = headers.size();
   constexpr auto nColsFromRows = std::tuple_size_v<std::tuple<Types...>>;
   if (nCols != nColsFromRows) {
-    throw std::invalid_argument("headers and rows have to have the same size");
+    throw std::invalid_argument("headers and rows have to have the same number of columns");
   }
 
   // Transform all elements into strings first to determine column widths
