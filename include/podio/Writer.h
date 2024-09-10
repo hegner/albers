@@ -2,6 +2,11 @@
 #define PODIO_WRITER_H
 
 #include "podio/Frame.h"
+#include "podio/FrameCategories.h"
+
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace podio {
 

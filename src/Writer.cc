@@ -8,7 +8,11 @@
   #include "podio/SIOWriter.h"
 #endif
 
+#include <algorithm>
+#include <cctype>
 #include <memory>
+#include <stdexcept>
+#include <utility>
 
 namespace podio {
 

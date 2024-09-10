@@ -5,7 +5,6 @@
 #include "podio/CollectionBuffers.h"
 #include "podio/SIOBlock.h"
 #include "podio/UserDataCollection.h"
-
 #include <sio/api.h>
 #include <sio/io_device.h>
 #include <sio/version.h>

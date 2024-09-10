@@ -1,7 +1,6 @@
 #include "podio/SIOReader.h"
 
 #include "sioUtils.h"
-
 #include <sio/api.h>
 #include <sio/definitions.h>
 

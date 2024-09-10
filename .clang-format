@@ -59,12 +59,12 @@ ForEachMacros:
   - foreach
   - Q_FOREACH
   - BOOST_FOREACH
-IncludeBlocks:   Preserve
+IncludeBlocks:   Regroup
 IncludeCategories:
-  - Regex:           '^(<|"(gtest|gmock|isl|json)/)'
-    Priority:        4
-  - Regex:           '.*'
-    Priority:        3
+  - Regex:           '<[[:alnum:]._]+>'
+    Priority:        5
+  - Regex:           '^(<"podio/)'
+    Priority:        1
 IncludeIsMainRegex: '(Test)?$'
 IndentCaseLabels: false
 IndentPPDirectives: BeforeHash

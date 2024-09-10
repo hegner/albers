@@ -1,7 +1,6 @@
-#include "read_test.h"
-
 #include "podio/Frame.h"
 #include "podio/SIOLegacyReader.h"
+#include "read_test.h"
 
 #include <iostream>
 

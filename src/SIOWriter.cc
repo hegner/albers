@@ -1,7 +1,7 @@
 #include "podio/SIOWriter.h"
+
 #include "podio/Frame.h"
 #include "podio/SIOBlock.h"
-
 #include "sioUtils.h"
 
 #include <memory>

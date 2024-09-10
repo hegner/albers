@@ -5,7 +5,6 @@
 #include "podio/CollectionIDTable.h"
 #include "podio/GenericParameters.h"
 #include "podio/SIOBlock.h"
-
 #include <sio/buffer.h>
 #include <sio/definitions.h>
 

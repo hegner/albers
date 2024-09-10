@@ -2,7 +2,15 @@
 #define PODIO_READER_H
 
 #include "podio/Frame.h"
+#include "podio/FrameCategories.h"
 #include "podio/podioVersion.h"
+
+#include <cstddef>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <vector>
 
 namespace podio {
 

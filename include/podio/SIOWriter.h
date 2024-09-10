@@ -3,7 +3,6 @@
 
 #include "podio/SIOBlock.h"
 #include "podio/utilities/DatamodelRegistryIOHelpers.h"
-
 #include <sio/definitions.h>
 
 #include <string>

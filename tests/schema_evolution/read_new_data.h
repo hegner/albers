@@ -5,7 +5,6 @@
 #include "datamodel/ExampleWithARelationCollection.h"
 #include "datamodel/ExampleWithArrayComponentCollection.h"
 #include "datamodel/ExampleWithNamespaceCollection.h"
-
 #include "podio/Frame.h"
 
 #include <iostream>

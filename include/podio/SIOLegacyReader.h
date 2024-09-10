@@ -4,7 +4,6 @@
 #include "podio/SIOBlock.h"
 #include "podio/SIOFrameData.h"
 #include "podio/podioVersion.h"
-
 #include <sio/definitions.h>
 
 #include <memory>

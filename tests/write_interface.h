@@ -1,9 +1,8 @@
 #ifndef PODIO_TESTS_WRITE_INTERFACE_H // NOLINT(llvm-header-guard): folder structure not suitable
 #define PODIO_TESTS_WRITE_INTERFACE_H // NOLINT(llvm-header-guard): folder structure not suitable
 
-#include "write_frame.h"
-
 #include "podio/Writer.h"
+#include "write_frame.h"
 
 void write_frames(podio::Writer& frameWriter) {
 

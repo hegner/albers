@@ -1,5 +1,8 @@
 #include "podio/ROOTFrameData.h"
 
+#include <functional>
+#include <utility>
+
 namespace podio {
 
 ROOTFrameData::ROOTFrameData(BufferMap&& buffers, CollIDPtr&& idTable, podio::GenericParameters&& params) :

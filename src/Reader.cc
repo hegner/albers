@@ -1,6 +1,10 @@
 #include "podio/Reader.h"
 
 #include "podio/ROOTReader.h"
+
+#include <TCollection.h>
+#include <TList.h>
+#include <TObject.h>
 #if PODIO_ENABLE_RNTUPLE
   #include "podio/RNTupleReader.h"
 #endif
@@ -10,7 +14,9 @@
 
 #include "TFile.h"
 #include "TKey.h"
+
 #include <memory>
+#include <utility>
 
 namespace podio {
 

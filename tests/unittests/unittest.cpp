@@ -1,23 +1,56 @@
 // STL
-#include <cstdint>
-#include <filesystem>
-#include <map>
-#include <sstream>
-#include <stdexcept>
-#include <thread>
-#include <type_traits>
-#include <vector>
-
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/matchers/catch_matchers_string.hpp"
 #include "catch2/matchers/catch_matchers_vector.hpp"
+#include <catch2/matchers/catch_matchers.hpp>
+#include <nlohmann/json_fwd.hpp>
 
+#include <array>
+#include <compare>
+#include <cstddef>
+#include <cstdint>
+#include <filesystem>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <optional>
+#include <set>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <vector>
 // podio specific includes
+#include "datamodel/CompWithInit.h"
+#include "datamodel/ExampleCluster.h"
+#include "datamodel/ExampleForCyclicDependency1.h"
+#include "datamodel/ExampleForCyclicDependency2.h"
+#include "datamodel/ExampleHit.h"
+#include "datamodel/ExampleHitData.h"
+#include "datamodel/ExampleWithOneRelation.h"
+#include "datamodel/ExampleWithVectorMember.h"
+#include "datamodel/MutableEventInfo.h"
+#include "datamodel/MutableExampleForCyclicDependency1.h"
+#include "datamodel/MutableExampleForCyclicDependency2.h"
+#include "datamodel/MutableExampleHit.h"
+#include "datamodel/MutableExampleWithOneRelation.h"
+#include "datamodel/MutableExampleWithUserInit.h"
+#include "datamodel/MutableExampleWithVectorMember.h"
+#include "datamodel/NamespaceStruct.h"
+#include "datamodel/NotSoSimpleStruct.h"
+#include "datamodel/SimpleStruct.h"
+#include "podio/CollectionBuffers.h"
 #include "podio/Frame.h"
+#include "podio/FrameCategories.h"
 #include "podio/GenericParameters.h"
+#include "podio/ObjectID.h"
 #include "podio/ROOTLegacyReader.h"
 #include "podio/ROOTReader.h"
 #include "podio/ROOTWriter.h"
+#include "podio/RelationRange.h"
 #include "podio/podioVersion.h"
 
 #ifndef PODIO_ENABLE_SIO
@@ -42,7 +75,6 @@
 #include "datamodel/ExampleHitCollection.h"
 #include "datamodel/ExampleWithArray.h"
 #include "datamodel/ExampleWithArrayComponent.h"
-#include "datamodel/ExampleWithComponent.h"
 #include "datamodel/ExampleWithExternalExtraCode.h"
 #include "datamodel/ExampleWithFixedWidthIntegers.h"
 #include "datamodel/ExampleWithOneRelationCollection.h"
@@ -53,7 +85,6 @@
 #include "datamodel/MutableExampleWithComponent.h"
 #include "datamodel/MutableExampleWithExternalExtraCode.h"
 #include "datamodel/StructWithExtraCode.h"
-
 #include "podio/UserDataCollection.h"
 
 TEST_CASE("AutoDelete", "[basics][memory-management]") {
@@ -793,9 +824,6 @@ void checkCollections(/*const*/ ExampleHitCollection& hits, /*const*/ ExampleClu
     }
   }
 }
-
-template <typename>
-struct TD;
 
 TEST_CASE("Move-only collections", "[collections][move-semantics]") {
   // Setup a few collections that will be used throughout below

@@ -1,23 +1,24 @@
 #ifndef PODIO_RNTUPLEREADER_H
 #define PODIO_RNTUPLEREADER_H
 
+#include "podio/GenericParameters.h"
 #include "podio/ROOTFrameData.h"
 #include "podio/SchemaEvolution.h"
 #include "podio/podioVersion.h"
 #include "podio/utilities/DatamodelRegistryIOHelpers.h"
+#include <ROOT/RVersion.hxx>
+#if ROOT_VERSION_CODE >= ROOT_VERSION(6, 31, 0)
+  #include <ROOT/RNTupleReader.hxx>
+#endif
 
+#include <memory>
 #include <string>
 #include <string_view>
 #include <unordered_map>
 #include <vector>
 
-#include <ROOT/RNTuple.hxx>
-#include <RVersion.h>
-#if ROOT_VERSION_CODE >= ROOT_VERSION(6, 31, 0)
-  #include <ROOT/RNTupleReader.hxx>
-#endif
-
 namespace podio {
+class CollectionIDTable;
 
 /**
 This class has the function to read available data from disk

@@ -1,11 +1,10 @@
 #ifndef PODIO_ROOTWRITER_H
 #define PODIO_ROOTWRITER_H
 
+#include "TFile.h"
 #include "podio/CollectionIDTable.h"
 #include "podio/utilities/DatamodelRegistryIOHelpers.h"
 #include "podio/utilities/RootHelpers.h"
-
-#include "TFile.h"
 
 #include <memory>
 #include <string>
@@ -18,7 +17,6 @@ class TTree;
 
 namespace podio {
 class Frame;
-class CollectionBase;
 class GenericParameters;
 
 /// The ROOTWriter writes podio files into ROOT files using TTrees.

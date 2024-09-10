@@ -1,8 +1,6 @@
 #ifndef PODIO_TESTS_WRITE_FRAME_H // NOLINT(llvm-header-guard): folder structure not suitable
 #define PODIO_TESTS_WRITE_FRAME_H // NOLINT(llvm-header-guard): folder structure not suitable
 
-#include "frame_test_common.h"
-
 #include "datamodel/EventInfoCollection.h"
 #include "datamodel/ExampleClusterCollection.h"
 #include "datamodel/ExampleHitCollection.h"
@@ -15,11 +13,10 @@
 #include "datamodel/ExampleWithNamespaceCollection.h"
 #include "datamodel/ExampleWithOneRelationCollection.h"
 #include "datamodel/ExampleWithVectorMemberCollection.h"
-
 #include "extension_model/ContainedTypeCollection.h"
 #include "extension_model/ExternalComponentTypeCollection.h"
 #include "extension_model/ExternalRelationTypeCollection.h"
-
+#include "frame_test_common.h"
 #include "podio/Frame.h"
 #include "podio/UserDataCollection.h"
 

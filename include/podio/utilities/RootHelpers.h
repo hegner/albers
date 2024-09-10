@@ -3,12 +3,18 @@
 
 #include "podio/GenericParameters.h"
 
-#include "ROOT/RVec.hxx"
-#include "TBranch.h"
-
+#include <cstdint>
 #include <string>
 #include <tuple>
 #include <vector>
+
+class TBranch;
+namespace ROOT {
+namespace VecOps {
+  template <typename T>
+  class RVec;
+} // namespace VecOps
+} // namespace ROOT
 
 namespace podio {
 class CollectionBase;

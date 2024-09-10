@@ -2,7 +2,6 @@
 #define PODIO_TESTS_READ_FRAME_AUXILIARY_H // NOLINT(llvm-header-guard): folder structure not suitable
 
 #include "frame_test_common.h"
-
 #include "podio/Frame.h"
 #include "podio/podioVersion.h"
 

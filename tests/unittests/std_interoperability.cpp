@@ -2,11 +2,13 @@
 #include "datamodel/ExampleHitCollection.h"
 #include "datamodel/MutableExampleHit.h"
 #include <catch2/catch_test_macros.hpp>
+
 #include <iterator>
 #include <limits>
 #include <memory>
 #include <stdexcept>
 #include <type_traits>
+#include <utility>
 
 // DOCUMENTED_STATIC_FAILURE and DOCUMENTED_FAILURE macro are used to indicate checks that corresponds to requirements
 // imposed but the standard but currently not met by podio. These check use inverted logic (they pass when the

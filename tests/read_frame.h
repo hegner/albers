@@ -3,13 +3,11 @@
 
 #include "datamodel/ExampleWithInterfaceRelationCollection.h"
 #include "datamodel/ExampleWithVectorMemberCollection.h"
-#include "read_test.h"
-
 #include "extension_model/ContainedTypeCollection.h"
 #include "extension_model/ExternalComponentTypeCollection.h"
 #include "extension_model/ExternalRelationTypeCollection.h"
-
 #include "podio/Frame.h"
+#include "read_test.h"
 
 #include <iostream>
 

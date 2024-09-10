@@ -1,15 +1,23 @@
 #include "podio/RNTupleWriter.h"
+
+#include "TFile.h"
+#include "podio/CollectionBuffers.h"
 #include "podio/DatamodelRegistry.h"
+#include "podio/Frame.h"
 #include "podio/SchemaEvolution.h"
 #include "podio/podioVersion.h"
 #include "rootUtils.h"
-
-#include "TFile.h"
-
+#include <ROOT/REntry.hxx>
+#include <ROOT/RError.hxx>
 #include <ROOT/RField.hxx>
 #include <ROOT/RNTupleModel.hxx>
 
+#include <stdexcept>
+#include <utility>
+
 namespace podio {
+class CollectionBase;
+class GenericParameters;
 
 RNTupleWriter::RNTupleWriter(const std::string& filename) :
     m_file(new TFile(filename.c_str(), "RECREATE", "data file")) {

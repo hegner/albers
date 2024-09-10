@@ -4,7 +4,6 @@
 #include "podio/CollectionBase.h"
 #include "podio/GenericParameters.h"
 #include "podio/SIOBlock.h"
-
 #include <sio/api.h>
 #include <sio/compression/zlib.h>
 #include <sio/definitions.h>

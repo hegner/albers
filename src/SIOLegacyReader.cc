@@ -1,7 +1,6 @@
 #include "podio/SIOLegacyReader.h"
 
 #include "sioUtils.h"
-
 #include <sio/api.h>
 #include <sio/compression/zlib.h>
 #include <sio/definitions.h>

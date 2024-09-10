@@ -1,10 +1,11 @@
 #include "podio/SIOBlock.h"
 
+#include "podio/GenericParameters.h"
+
 #include <algorithm>
 #include <cstdlib>
 #include <dlfcn.h>
 #include <filesystem>
-#include <map>
 #include <sstream>
 
 namespace podio {

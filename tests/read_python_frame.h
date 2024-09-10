@@ -3,7 +3,6 @@
 
 #include "datamodel/ExampleClusterCollection.h"
 #include "datamodel/ExampleHitCollection.h"
-
 #include "podio/Frame.h"
 
 #include <iostream>

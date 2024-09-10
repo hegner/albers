@@ -8,12 +8,26 @@
 #include "podio/CollectionIDTable.h"
 #include "podio/GenericParameters.h"
 #include "podio/ROOTLegacyReader.h"
+#include "podio/podioVersion.h"
+#include "podio/utilities/RootHelpers.h"
 
 // ROOT specific includes
 #include "TChain.h"
 #include "TClass.h"
 #include "TFile.h"
 #include "TTree.h"
+
+#include <cstddef>
+#include <functional>
+#include <iostream>
+#include <memory>
+#include <optional>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <tuple>
+#include <utility>
+#include <vector>
 
 namespace podio {
 

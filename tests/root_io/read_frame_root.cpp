@@ -1,7 +1,6 @@
+#include "podio/ROOTReader.h"
 #include "read_frame.h"
 #include "read_frame_auxiliary.h"
-
-#include "podio/ROOTReader.h"
 
 #include <iostream>
 #include <string>

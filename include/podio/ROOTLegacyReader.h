@@ -1,11 +1,10 @@
 #ifndef PODIO_ROOTLEGACYREADER_H
 #define PODIO_ROOTLEGACYREADER_H
 
+#include "TChain.h"
 #include "podio/ROOTFrameData.h"
 #include "podio/podioVersion.h"
 #include "podio/utilities/RootHelpers.h"
-
-#include "TChain.h"
 
 #include <memory>
 #include <string>

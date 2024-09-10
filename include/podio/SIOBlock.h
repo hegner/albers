@@ -6,7 +6,6 @@
 #include <podio/GenericParameters.h>
 #include <podio/podioVersion.h>
 #include <podio/utilities/TypeHelpers.h>
-
 #include <sio/block.h>
 #include <sio/io_device.h>
 #include <sio/version.h>

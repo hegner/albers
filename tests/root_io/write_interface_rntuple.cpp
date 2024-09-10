@@ -1,3 +1,4 @@
+#include "podio/Writer.h"
 #include "write_interface.h"
 
 int main(int, char**) {

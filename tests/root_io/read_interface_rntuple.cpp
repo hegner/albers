@@ -1,3 +1,4 @@
+#include "podio/Reader.h"
 #include "read_interface.h"
 
 int main(int, char**) {

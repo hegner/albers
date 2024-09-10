@@ -1,4 +1,5 @@
 #include "podio/ROOTReader.h"
+
 #include "podio/CollectionBase.h"
 #include "podio/CollectionBufferFactory.h"
 #include "podio/CollectionBuffers.h"
@@ -8,12 +9,18 @@
 #include "podio/utilities/RootHelpers.h"
 #include "rootUtils.h"
 
+#include <TBranch.h>
+#include <TObjArray.h>
+#include <TObject.h>
+#include <algorithm>
+#include <compare>
+#include <functional>
+#include <optional>
+#include <stdexcept>
+#include <unordered_map>
 // ROOT specific includes
 #include "TChain.h"
 #include "TClass.h"
-
-#include <stdexcept>
-#include <unordered_map>
 
 namespace podio {
 

@@ -1,23 +1,33 @@
 #ifndef PODIO_RNTUPLEWRITER_H
 #define PODIO_RNTUPLEWRITER_H
 
-#include "podio/Frame.h"
+#include "TFile.h"
 #include "podio/SchemaEvolution.h"
 #include "podio/utilities/DatamodelRegistryIOHelpers.h"
 #include "podio/utilities/RootHelpers.h"
-
-#include "TFile.h"
-#include <ROOT/RNTuple.hxx>
 #include <ROOT/RNTupleModel.hxx>
+#include <ROOT/RVersion.hxx>
+
+#include <cstdint>
+
+namespace ROOT {
+namespace Experimental {
+  class REntry;
+} // namespace Experimental
+} // namespace ROOT
 #if ROOT_VERSION_CODE >= ROOT_VERSION(6, 31, 0)
   #include <ROOT/RNTupleWriter.hxx>
 #endif
 
+#include <memory>
 #include <string>
+#include <tuple>
 #include <unordered_map>
 #include <vector>
 
 namespace podio {
+class Frame;
+class GenericParameters;
 
 /// The RNTupleWriter writes podio files into ROOT files using the new RNTuple
 /// format.
