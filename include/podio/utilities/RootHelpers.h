@@ -18,7 +18,13 @@ namespace root_utils {
   // A collection of additional information that describes the collection: the
   // collectionID, the collection (data) type, whether it is a subset
   // collection, and its schema version
-  using CollectionWriteInfoT = std::tuple<uint32_t, std::string, bool, unsigned int>;
+  struct CollectionWriteInfoT {
+    uint32_t collectionID{static_cast<uint32_t>(-1)};
+    std::string dataType{};
+    bool isSubset{false};
+    unsigned int schemaVersion{0};
+  };
+
   // for backwards compatibility
   using CollectionInfoWithoutSchemaT = std::tuple<int, std::string, bool>;
 
