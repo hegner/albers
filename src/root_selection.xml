@@ -6,7 +6,7 @@
     <class name="podio::RNTupleReader"/>
     <class name="podio::RNTupleWriter"/>
 
-    <class name="podio::root_utils::CollectionWriteInfoT"/>
-    <class name="std::vector<podio::root_utils::CollectionWriteInfoT>"/>
+    <class name="podio::root_utils::CollectionWriteInfo"/>
+    <class name="std::vector<podio::root_utils::CollectionWriteInfo>"/>
   </selection>
 </lcgdict>
