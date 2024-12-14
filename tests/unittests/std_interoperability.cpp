@@ -571,6 +571,165 @@ TEST_CASE("Collection and iterator concepts", "[collection][container][iterator]
     REQUIRE(--(++a) == b);
     REQUIRE(++(--a) == b);
   }
+
+  SECTION("random_access_iterator") {
+    // iterator
+    STATIC_REQUIRE(std::totally_ordered<iterator>);
+    {
+      auto coll = CollectionType();
+      coll.create();
+      coll.create();
+      coll.create();
+      auto a = coll.begin();
+      auto b = coll.begin();
+      REQUIRE(!(a < b));
+      REQUIRE(!(a > b));
+      REQUIRE((a == b));
+      b = ++coll.begin();
+      REQUIRE((a < b));
+      REQUIRE(!(a > b));
+      REQUIRE(!(a == b));
+      a = ++coll.begin();
+      b = coll.begin();
+      REQUIRE(!(a < b));
+      REQUIRE(a > b);
+      REQUIRE(!(a == b));
+      auto c = coll.begin();
+      a = c++;
+      b = c++;
+      REQUIRE(a < b);
+      REQUIRE(b < c);
+      REQUIRE(a < c);
+      REQUIRE((a > b) == (b < a));
+      REQUIRE((a >= b) == !(a < b));
+      REQUIRE((a <= b) == !(a > b));
+    }
+    STATIC_REQUIRE(std::sized_sentinel_for<iterator, iterator>);
+    {
+      auto coll = CollectionType();
+      coll.create();
+      auto i = coll.begin();
+      auto s = coll.end();
+      auto n = 1;
+      REQUIRE(s - i == n);
+      REQUIRE(i - s == -n);
+    }
+    STATIC_REQUIRE(std::random_access_iterator<iterator>);
+    {
+      auto coll = CollectionType();
+      coll.create().cellID(42);
+      coll.create().cellID(43);
+      coll.create().cellID(44);
+      coll.create().cellID(45);
+      auto a = coll.begin();
+      auto n = 2;
+      auto b = a + n;
+      REQUIRE((a += n) == b);
+      a = coll.begin();
+      REQUIRE(std::addressof(a += n) == std::addressof(a));
+      a = coll.begin();
+      auto k = a + n;
+      REQUIRE(k == (a += n));
+      a = coll.begin();
+      REQUIRE((a + n) == (n + a));
+      auto x = 1;
+      auto y = 2;
+      REQUIRE((a + (x + y)) == ((a + x) + y));
+      REQUIRE((a + 0) == a);
+      b = a + n;
+      REQUIRE((--b) == (a + n - 1));
+      b = a + n;
+      REQUIRE((b += -n) == a);
+      b = a + n;
+      REQUIRE((b -= +n) == a);
+      b = a + n;
+      REQUIRE(std::addressof(b -= n) == std::addressof(b));
+      b = a + n;
+      k = b - n;
+      REQUIRE(k == (b -= n));
+      b = a + n;
+      REQUIRE(a[n] == *b);
+      REQUIRE(a <= b);
+    }
+    // const_iterator
+    STATIC_REQUIRE(std::totally_ordered<const_iterator>);
+    {
+      auto coll = CollectionType();
+      coll.create();
+      coll.create();
+      coll.create();
+      auto a = coll.cbegin();
+      auto b = coll.cbegin();
+      REQUIRE(!(a < b));
+      REQUIRE(!(a > b));
+      REQUIRE((a == b));
+      b = ++coll.cbegin();
+      REQUIRE((a < b));
+      REQUIRE(!(a > b));
+      REQUIRE(!(a == b));
+      a = ++coll.cbegin();
+      b = coll.cbegin();
+      REQUIRE(!(a < b));
+      REQUIRE(a > b);
+      REQUIRE(!(a == b));
+      auto c = coll.cbegin();
+      a = c++;
+      b = c++;
+      REQUIRE(a < b);
+      REQUIRE(b < c);
+      REQUIRE(a < c);
+      REQUIRE((a > b) == (b < a));
+      REQUIRE((a >= b) == !(a < b));
+      REQUIRE((a <= b) == !(a > b));
+    }
+    STATIC_REQUIRE(std::sized_sentinel_for<const_iterator, const_iterator>);
+    {
+      auto coll = CollectionType();
+      coll.create();
+      auto i = coll.cbegin();
+      auto s = coll.cend();
+      auto n = 1;
+      REQUIRE(s - i == n);
+      REQUIRE(i - s == -n);
+    }
+    STATIC_REQUIRE(std::random_access_iterator<const_iterator>);
+    {
+      auto coll = CollectionType();
+      coll.create().cellID(42);
+      coll.create().cellID(43);
+      coll.create().cellID(44);
+      coll.create().cellID(45);
+      auto a = coll.cbegin();
+      auto n = 2;
+      auto b = a + n;
+      REQUIRE((a += n) == b);
+      a = coll.cbegin();
+      REQUIRE(std::addressof(a += n) == std::addressof(a));
+      a = coll.cbegin();
+      auto k = a + n;
+      REQUIRE(k == (a += n));
+      a = coll.cbegin();
+      REQUIRE((a + n) == (n + a));
+      auto x = 1;
+      auto y = 2;
+      REQUIRE((a + (x + y)) == ((a + x) + y));
+      REQUIRE((a + 0) == a);
+      b = a + n;
+      REQUIRE((--b) == (a + n - 1));
+      b = a + n;
+      REQUIRE((b += -n) == a);
+      b = a + n;
+      REQUIRE((b -= +n) == a);
+      b = a + n;
+      REQUIRE(std::addressof(b -= n) == std::addressof(b));
+      b = a + n;
+      k = b - n;
+      REQUIRE(k == (b -= n));
+      b = a + n;
+      REQUIRE(a[n] == *b);
+      REQUIRE(a <= b);
+    }
+  }
 }
 
 TEST_CASE("Collection and unsupported iterator concepts", "[collection][container][iterator][std]") {
@@ -584,9 +743,6 @@ TEST_CASE("Collection and unsupported iterator concepts", "[collection][containe
   DOCUMENTED_STATIC_FAILURE(std::output_iterator<iterator, CollectionType::mutable_type>);
   DOCUMENTED_STATIC_FAILURE(std::output_iterator<const_iterator, CollectionType::value_type>);
   DOCUMENTED_STATIC_FAILURE(std::output_iterator<const_iterator, CollectionType::mutable_type>);
-  // std::random_access_iterator
-  DOCUMENTED_STATIC_FAILURE(std::random_access_iterator<iterator>);
-  DOCUMENTED_STATIC_FAILURE(std::random_access_iterator<const_iterator>);
   // std::contiguous_iterator
   DOCUMENTED_STATIC_FAILURE(std::contiguous_iterator<iterator>);
   DOCUMENTED_STATIC_FAILURE(std::contiguous_iterator<const_iterator>);
@@ -1207,7 +1363,7 @@ TEST_CASE("Collection as range", "[collection][ranges][std]") {
   // std::range::bidirectional_range
   STATIC_REQUIRE(std::ranges::bidirectional_range<CollectionType>);
   // std::range::random_access_range
-  DOCUMENTED_STATIC_FAILURE(std::ranges::random_access_range<CollectionType>);
+  STATIC_REQUIRE(std::ranges::random_access_range<CollectionType>);
   // std::range::contiguous_range
   DOCUMENTED_STATIC_FAILURE(std::ranges::contiguous_range<CollectionType>);
   // std::range::common_range

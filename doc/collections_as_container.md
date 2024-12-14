@@ -90,7 +90,7 @@ In the following tables a convention from `Collection` is used: `iterator` stand
 | `std::output_iterator` | ❌ no | ❌ no |
 | `std::forward_iterator` | ✔️ yes (see note below) | ✔️ yes (see note below) |
 | `std::bidirectional_iterator` | ✔️ yes | ✔️ yes |
-| `std::random_access_iterator` | ❌ no | ❌ no |
+| `std::random_access_iterator` | ✔️ yes | ✔️ yes |
 | `std::contiguous_iterator` | ❌ no | ❌ no |
 
 > [!NOTE]  
@@ -186,7 +186,7 @@ In addition to the *LegacyForwardIterator* the C++ standard specifies also the *
 | `std::ranges::output_range` | ❌ no |
 | `std::ranges::forward_range` | ✔️ yes |
 | `std::ranges::bidirectional_range` | ✔️ yes |
-| `std::ranges::random_access_range` | ❌ no |
+| `std::ranges::random_access_range` | ✔️ yes |
 | `std::ranges::contiguous_range` | ❌ no |
 | `std::ranges::common_range` | ✔️ yes |
 | `std::ranges::viewable_range` | ✔️ yes |
@@ -211,11 +211,11 @@ std::sort(std::begin(collection), std::end(collection)); // requires RandomAcces
 
 The arguments of standard range algorithms are checked at compile time and must fulfil certain iterator concepts, such as `std::input_iterator` or `std::ranges::input_range`.
 
-The iterators of PODIO collections model the `std::bidirectional_iterator` concept, so range algorithms that require this iterator type will work correctly with PODIO iterators. If an algorithm compiles, it is guaranteed to work as expected.
+The iterators of PODIO collections model the `std::random_access_iterator` concept, so range algorithms that require this iterator type will work correctly with PODIO iterators. If an algorithm compiles, it is guaranteed to work as expected.
 
 In particular, the PODIO collections' iterators do not fulfil the `std::output_iterator` concept, and as a result, mutating algorithms relying on this iterator type will not compile.
 
-Similarly the collections themselves model the `std::bidirectional_range` concept and can be used in the range algorithms that require that concept. The algorithms requiring unsupported range concept, such as `std::output_range`, won't compile.
+Similarly the collections themselves model the `std::random_access_range` concept and can be used in the range algorithms that require that concept. The algorithms requiring unsupported range concept, such as `std::output_range`, won't compile.
 
 For example:
 ```c++
