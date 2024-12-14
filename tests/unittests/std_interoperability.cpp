@@ -497,6 +497,35 @@ TEST_CASE("Collection and iterator concepts", "[collection][container][iterator]
     // const_iterator
     STATIC_REQUIRE(std::input_iterator<const_iterator>);
   }
+
+  SECTION("forward_iterator") {
+    // iterator
+    STATIC_REQUIRE(std::forward_iterator<iterator>);
+    {
+      REQUIRE(iterator{} == iterator{});
+      auto coll = CollectionType();
+      coll.create();
+      auto i = coll.begin();
+      auto j = coll.begin();
+      REQUIRE(i == j);
+      REQUIRE(++i == ++j);
+      i = coll.begin();
+      REQUIRE(((void)[](auto x) { ++x; }(i), *i) == *i);
+    }
+    // const_iterator
+    STATIC_REQUIRE(std::forward_iterator<const_iterator>);
+    {
+      REQUIRE(const_iterator{} == const_iterator{});
+      auto coll = CollectionType();
+      coll.create();
+      auto i = coll.cbegin();
+      auto j = coll.cbegin();
+      REQUIRE(i == j);
+      REQUIRE(++i == ++j);
+      i = coll.cbegin();
+      REQUIRE(((void)[](auto x) { ++x; }(i), *i) == *i);
+    }
+  }
 }
 
 TEST_CASE("Collection and unsupported iterator concepts", "[collection][container][iterator][std]") {
@@ -510,9 +539,6 @@ TEST_CASE("Collection and unsupported iterator concepts", "[collection][containe
   DOCUMENTED_STATIC_FAILURE(std::output_iterator<iterator, CollectionType::mutable_type>);
   DOCUMENTED_STATIC_FAILURE(std::output_iterator<const_iterator, CollectionType::value_type>);
   DOCUMENTED_STATIC_FAILURE(std::output_iterator<const_iterator, CollectionType::mutable_type>);
-  // std::forward_iterator
-  DOCUMENTED_STATIC_FAILURE(std::forward_iterator<iterator>);
-  DOCUMENTED_STATIC_FAILURE(std::forward_iterator<const_iterator>);
   // std::bidirectional_iterator
   DOCUMENTED_STATIC_FAILURE(std::bidirectional_iterator<iterator>);
   DOCUMENTED_STATIC_FAILURE(std::bidirectional_iterator<const_iterator>);
@@ -1087,7 +1113,7 @@ TEST_CASE("Collection as range", "[collection][ranges][std]") {
   DOCUMENTED_STATIC_FAILURE(std::ranges::output_range<CollectionType, CollectionType::value_type>);
   DOCUMENTED_STATIC_FAILURE(std::ranges::output_range<CollectionType, CollectionType::mutable_type>);
   // std::range::forward_range
-  DOCUMENTED_STATIC_FAILURE(std::ranges::forward_range<CollectionType>);
+  STATIC_REQUIRE(std::ranges::forward_range<CollectionType>);
   // std::range::bidirectional_range
   DOCUMENTED_STATIC_FAILURE(std::ranges::bidirectional_range<CollectionType>);
   // std::range::random_access_range
@@ -1156,13 +1182,14 @@ TEST_CASE("Collection and std ranges algorithms", "[collection][ranges][std]") {
   REQUIRE(subcoll.size() == 2);
   REQUIRE(subcoll[0].cellID() == 5);
   REQUIRE(subcoll[1].cellID() == 3);
-}
 
-// helper concept for unsupported algorithm compilation test
-template <typename T>
-concept is_range_adjacent_findable = requires(T coll) {
-  std::ranges::adjacent_find(coll, [](const auto& a, const auto& b) { return a.cellID() == b.cellID(); });
-};
+  auto adjacent_it =
+      std::ranges::adjacent_find(coll, [](const auto& a, const auto& b) { return a.cellID() == b.cellID(); });
+  REQUIRE(adjacent_it != std::end(coll));
+  auto target = std::begin(coll);
+  std::ranges::advance(target, 2);
+  REQUIRE(adjacent_it == target);
+}
 
 // helper concept for unsupported algorithm compilation test
 template <typename T>
@@ -1175,7 +1202,6 @@ concept is_range_fillable = requires(T coll) { std::ranges::fill(coll, typename 
 
 TEST_CASE("Collection and unsupported std ranges algorithms", "[collection][ranges][std]") {
   // check that algorithms requiring unsupported iterator concepts won't compile
-  DOCUMENTED_STATIC_FAILURE(is_range_adjacent_findable<CollectionType>);
   DOCUMENTED_STATIC_FAILURE(is_range_sortable<CollectionType>);
   DOCUMENTED_STATIC_FAILURE(is_range_fillable<CollectionType>);
 }

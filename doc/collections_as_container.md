@@ -88,10 +88,14 @@ In the following tables a convention from `Collection` is used: `iterator` stand
 | `std::input_or_output_iterator` | ✔️ yes | ✔️ yes |
 | `std::input_iterator` | ✔️ yes | ✔️ yes |
 | `std::output_iterator` | ❌ no | ❌ no |
-| `std::forward_iterator` | ❌ no | ❌ no |
+| `std::forward_iterator` | ✔️ yes (see note below) | ✔️ yes (see note below) |
 | `std::bidirectional_iterator` | ❌ no | ❌ no |
 | `std::random_access_iterator` | ❌ no | ❌ no |
 | `std::contiguous_iterator` | ❌ no | ❌ no |
+
+> [!NOTE]  
+>The collections' iterators fulfil the `std::forward_iterator` except that the pointers obtained with `->` remain valid only as long as the iterator is valid instead of as long as the range remain valid. In practice this means a `ptr` obtained with `auto* ptr = it.operator->();` is valid only as long as `it` is valid. 
+>The values obtained immediately through `->` (for instance `auto& e = it->energy();`) behaves as expected for `std::forward_iterator` as their validity is tied to the validity of a collection.
 
 ### LegacyIterator
 
@@ -180,7 +184,7 @@ In addition to the *LegacyForwardIterator* the C++ standard specifies also the *
 | `std::ranges::sized_range` | ✔️ yes |
 | `std::ranges::input_range` | ✔️ yes |
 | `std::ranges::output_range` | ❌ no |
-| `std::ranges::forward_range` | ❌ no |
+| `std::ranges::forward_range` | ✔️ yes |
 | `std::ranges::bidirectional_range` | ❌ no |
 | `std::ranges::random_access_range` | ❌ no |
 | `std::ranges::contiguous_range` | ❌ no |
@@ -207,16 +211,16 @@ std::sort(std::begin(collection), std::end(collection)); // requires RandomAcces
 
 The arguments of standard range algorithms are checked at compile time and must fulfil certain iterator concepts, such as `std::input_iterator` or `std::ranges::input_range`.
 
-The iterators of PODIO collections model the `std::input_iterator` concept, so range algorithms that require this iterator type will work correctly with PODIO iterators. If an algorithm compiles, it is guaranteed to work as expected.
+The iterators of PODIO collections model the `std::forward_iterator` concept, so range algorithms that require this iterator type will work correctly with PODIO iterators. If an algorithm compiles, it is guaranteed to work as expected.
 
 In particular, the PODIO collections' iterators do not fulfil the `std::output_iterator` concept, and as a result, mutating algorithms relying on this iterator type will not compile.
 
-Similarly the collections themselves model the `std::input_range` concept and can be used in the range algorithms that require that concept. The algorithms requiring unsupported range concept, such as `std::output_range`, won't compile.
+Similarly the collections themselves model the `std::forward_range` concept and can be used in the range algorithms that require that concept. The algorithms requiring unsupported range concept, such as `std::output_range`, won't compile.
 
 For example:
 ```c++
 std::ranges::find_if(collection, predicate ); // requires input_range -> OK
-std::ranges::adjacent_find(collection, predicate ); // requires forward_range -> won't compile
+std::ranges::adjacent_find(collection, predicate ); // requires forward_range -> OK
 std::ranges::fill(collection, value ); // requires output_range -> won't compile
 std::ranges::sort(collection); // requires random_access_range and sortable -> won't compile
 ```
