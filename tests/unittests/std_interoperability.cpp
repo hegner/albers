@@ -526,6 +526,51 @@ TEST_CASE("Collection and iterator concepts", "[collection][container][iterator]
       REQUIRE(((void)[](auto x) { ++x; }(i), *i) == *i);
     }
   }
+
+  SECTION("bidirectional_iterator") {
+    // iterator
+    STATIC_REQUIRE(std::bidirectional_iterator<iterator>);
+    {
+      auto coll = CollectionType();
+      coll.create();
+      auto a = ++coll.begin();
+      REQUIRE(std::addressof(--a) == std::addressof(a));
+      a = ++coll.begin();
+      auto b = ++coll.begin();
+      REQUIRE(a == b);
+      REQUIRE(a-- == b);
+      a = ++coll.begin();
+      REQUIRE(a == b);
+      a--;
+      --b;
+      REQUIRE(a == b);
+      a = ++coll.begin();
+      b = ++coll.begin();
+      REQUIRE(a == b);
+      REQUIRE(--(++a) == b);
+      REQUIRE(++(--a) == b);
+    }
+    // const_iterator
+    STATIC_REQUIRE(std::bidirectional_iterator<const_iterator>);
+    auto coll = CollectionType();
+    coll.create();
+    auto a = ++coll.cbegin();
+    REQUIRE(std::addressof(--a) == std::addressof(a));
+    a = ++coll.cbegin();
+    auto b = ++coll.cbegin();
+    REQUIRE(a == b);
+    REQUIRE(a-- == b);
+    a = ++coll.cbegin();
+    REQUIRE(a == b);
+    a--;
+    --b;
+    REQUIRE(a == b);
+    a = ++coll.cbegin();
+    b = ++coll.cbegin();
+    REQUIRE(a == b);
+    REQUIRE(--(++a) == b);
+    REQUIRE(++(--a) == b);
+  }
 }
 
 TEST_CASE("Collection and unsupported iterator concepts", "[collection][container][iterator][std]") {
@@ -539,9 +584,6 @@ TEST_CASE("Collection and unsupported iterator concepts", "[collection][containe
   DOCUMENTED_STATIC_FAILURE(std::output_iterator<iterator, CollectionType::mutable_type>);
   DOCUMENTED_STATIC_FAILURE(std::output_iterator<const_iterator, CollectionType::value_type>);
   DOCUMENTED_STATIC_FAILURE(std::output_iterator<const_iterator, CollectionType::mutable_type>);
-  // std::bidirectional_iterator
-  DOCUMENTED_STATIC_FAILURE(std::bidirectional_iterator<iterator>);
-  DOCUMENTED_STATIC_FAILURE(std::bidirectional_iterator<const_iterator>);
   // std::random_access_iterator
   DOCUMENTED_STATIC_FAILURE(std::random_access_iterator<iterator>);
   DOCUMENTED_STATIC_FAILURE(std::random_access_iterator<const_iterator>);
@@ -950,15 +992,63 @@ TEST_CASE("Collection and std iterator adaptors", "[collection][container][adapt
     STATIC_REQUIRE(traits::has_iterator_category_v<std::iterator_traits<iterator>>);
     DOCUMENTED_STATIC_FAILURE(
         std::is_base_of_v<std::bidirectional_iterator_tag, std::iterator_traits<iterator>::iterator_category>);
-    DOCUMENTED_STATIC_FAILURE(std::bidirectional_iterator<iterator>);
-    // TODO add runtime checks here
+    STATIC_REQUIRE(std::bidirectional_iterator<iterator>);
+    {
+      auto coll = CollectionType();
+      coll.create().cellID(42);
+      coll.create().cellID(43);
+      auto rit = std::reverse_iterator(std::end(coll));
+      DOCUMENTED_STATIC_FAILURE(
+          traits::has_member_of_pointer_v<const iterator>); // can't -> because
+                                                            // std::reverse_iterator<I>::operator->()
+                                                            // is const
+      // REQUIRE(rit->cellID() == 43);
+      REQUIRE((*rit).cellID() == 43);
+      ++rit;
+      // REQUIRE(rit->cellID() == 42);
+      REQUIRE((*rit).cellID() == 42);
+      REQUIRE(rit.base()->cellID() == 43);
+      rit = std::reverse_iterator(std::begin(coll));
+      REQUIRE(rit.base()->cellID() == 42);
+      --rit;
+      // REQUIRE(rit->cellID() == 42);
+      REQUIRE((*rit).cellID() == 42);
+      REQUIRE(rit.base()->cellID() == 43);
+      --rit;
+      // REQUIRE(rit->cellID() == 43);
+      REQUIRE((*rit).cellID() == 43);
+    }
     // const_iterator
     STATIC_REQUIRE(traits::has_const_iterator_v<CollectionType>);
     STATIC_REQUIRE(traits::has_iterator_category_v<std::iterator_traits<const_iterator>>);
     DOCUMENTED_STATIC_FAILURE(
         std::is_base_of_v<std::bidirectional_iterator_tag, std::iterator_traits<const_iterator>::iterator_category>);
-    DOCUMENTED_STATIC_FAILURE(std::bidirectional_iterator<iterator>);
-    // TODO add runtime checks here
+    STATIC_REQUIRE(std::bidirectional_iterator<const_iterator>);
+    {
+      auto coll = CollectionType();
+      coll.create().cellID(42);
+      coll.create().cellID(43);
+      auto rit = std::reverse_iterator(std::cend(coll));
+      DOCUMENTED_STATIC_FAILURE(
+          traits::has_member_of_pointer_v<const const_iterator>); // can't -> because
+                                                                  // std::reverse_iterator<I>::operator->()
+                                                                  // is const
+      // REQUIRE(rit->cellID() == 43);
+      REQUIRE((*rit).cellID() == 43);
+      ++rit;
+      // REQUIRE(rit->cellID() == 42);
+      REQUIRE((*rit).cellID() == 42);
+      REQUIRE(rit.base()->cellID() == 43);
+      rit = std::reverse_iterator(std::cbegin(coll));
+      REQUIRE(rit.base()->cellID() == 42);
+      --rit;
+      // REQUIRE(rit->cellID() == 42);
+      REQUIRE((*rit).cellID() == 42);
+      REQUIRE(rit.base()->cellID() == 43);
+      --rit;
+      // REQUIRE(rit->cellID() == 43);
+      REQUIRE((*rit).cellID() == 43);
+    }
   }
   SECTION("Back inserter") {
     DOCUMENTED_STATIC_FAILURE(traits::has_const_reference_v<CollectionType>);
@@ -1115,7 +1205,7 @@ TEST_CASE("Collection as range", "[collection][ranges][std]") {
   // std::range::forward_range
   STATIC_REQUIRE(std::ranges::forward_range<CollectionType>);
   // std::range::bidirectional_range
-  DOCUMENTED_STATIC_FAILURE(std::ranges::bidirectional_range<CollectionType>);
+  STATIC_REQUIRE(std::ranges::bidirectional_range<CollectionType>);
   // std::range::random_access_range
   DOCUMENTED_STATIC_FAILURE(std::ranges::random_access_range<CollectionType>);
   // std::range::contiguous_range
@@ -1189,6 +1279,9 @@ TEST_CASE("Collection and std ranges algorithms", "[collection][ranges][std]") {
   auto target = std::begin(coll);
   std::ranges::advance(target, 2);
   REQUIRE(adjacent_it == target);
+
+  auto rev_view = std::ranges::views::reverse(coll);
+  REQUIRE(rev_view.front().cellID() == 3);
 }
 
 // helper concept for unsupported algorithm compilation test
