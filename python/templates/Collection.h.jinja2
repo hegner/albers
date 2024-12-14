@@ -50,6 +50,8 @@ public:
   using iterator = {{ class.bare_type }}MutableCollectionIterator;
   using difference_type = ptrdiff_t;
   using size_type = size_t;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+  using reverse_iterator = std::reverse_iterator<iterator>;
 
   {{ class.bare_type }}Collection();
   {{ class.bare_type }}Collection({{ class.bare_type }}CollectionData&& data, bool isSubsetColl);
@@ -167,6 +169,26 @@ public:
   const_iterator cend() const {
     return end();
   }
+  // reverse iterators
+  reverse_iterator rbegin() {
+    return reverse_iterator(end());
+  }
+  const_reverse_iterator rbegin() const {
+    return const_reverse_iterator(end());
+  }
+  const_reverse_iterator crbegin() const {
+    return rbegin();
+  }
+  reverse_iterator rend() {
+    return reverse_iterator(begin());
+  }
+  const_reverse_iterator rend() const {
+    return const_reverse_iterator(begin());
+  }
+  const_reverse_iterator crend() const {
+    return rend();
+  } 
+
 
 {% for member in Members %}
   std::vector<{{ member.full_type }}> {{ member.name }}(const size_t nElem = 0) const;
