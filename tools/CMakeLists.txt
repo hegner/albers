@@ -1,3 +1,7 @@
+add_executable(podio-dump-cpp src/podio-dump.cpp)
+target_link_libraries(podio-dump-cpp PRIVATE podio::podio podio::podioIO fmt::fmt)
+
+
 install(PROGRAMS ${CMAKE_CURRENT_LIST_DIR}/podio-dump DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(PROGRAMS ${CMAKE_CURRENT_LIST_DIR}/podio-vis DESTINATION ${CMAKE_INSTALL_BINDIR})
 if(ENABLE_RNTUPLE)
