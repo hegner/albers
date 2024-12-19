@@ -76,9 +76,6 @@
   /// create a mutable deep-copy of the object with identical relations
   /// if cloneRelations=false, the relations are not cloned and will be empty
   Mutable{{ type }} clone(bool cloneRelations=true) const;
-
-  /// destructor
-  ~{{  full_type }}() = default;
 {% endmacro %}
 
 

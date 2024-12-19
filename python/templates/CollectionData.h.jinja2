@@ -59,11 +59,6 @@ public:
   {{ class_type }}({{ class_type }}&& other) = default;
   {{ class_type }}& operator=({{ class_type }}&& other) = default;
 
-  /**
-   * Destructor
-   */
-  ~{{ class_type }}() = default;
-
   void clear(bool isSubsetColl);
 
   podio::CollectionWriteBuffers getCollectionBuffers(bool isSubsetColl);

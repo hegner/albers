@@ -42,7 +42,6 @@ public:
   LinkCollectionData& operator=(const LinkCollectionData&) = delete;
   LinkCollectionData(LinkCollectionData&&) = default;
   LinkCollectionData& operator=(LinkCollectionData&&) = default;
-  ~LinkCollectionData() = default;
 
   podio::CollectionWriteBuffers getCollectionBuffers(bool isSubsetColl) {
     return {isSubsetColl ? nullptr : (void*)&m_data, (void*)m_data.get(), &m_refCollections, &m_vecInfo};

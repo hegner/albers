@@ -38,8 +38,6 @@ private:
     WriterModel(WriterModel&&) = default;
     WriterModel& operator=(WriterModel&&) = default;
 
-    ~WriterModel() = default;
-
     void writeFrame(const podio::Frame& frame, const std::string& category,
                     const std::vector<std::string>& collections) override {
       return m_writer->writeFrame(frame, category, collections);
@@ -65,12 +63,6 @@ public:
   Writer& operator=(const Writer&) = delete;
   Writer(Writer&&) = default;
   Writer& operator=(Writer&&) = default;
-
-  /// Destructor
-  ///
-  /// This also takes care of writing all the necessary metadata to read files
-  /// back again.
-  ~Writer() = default;
 
   /// Store the given frame with the given category
   ///

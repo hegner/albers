@@ -39,7 +39,6 @@ public:
   CollectionBufferFactory& operator=(CollectionBufferFactory const&) = delete;
   CollectionBufferFactory(CollectionBufferFactory&&) = delete;
   CollectionBufferFactory& operator=(CollectionBufferFactory&&) = delete;
-  ~CollectionBufferFactory() = default;
 
   /// Mutable instance only used for the initial registration of functions
   /// during library loading

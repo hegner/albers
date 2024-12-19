@@ -37,9 +37,6 @@ public:
   /// No assignment operator
   LinkObj& operator=(const LinkObj&) = delete;
 
-  /// Destructor
-  ~LinkObj() = default;
-
 public:
   podio::ObjectID id{};
   LinkData data{1.0f};

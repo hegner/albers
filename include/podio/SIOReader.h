@@ -27,9 +27,6 @@ class SIOReader {
 public:
   /// Create an SIOReader
   SIOReader();
-  /// SIOReader destructor
-  ~SIOReader() = default;
-
   /// The SIOReader is not copy-able
   SIOReader(const SIOReader&) = delete;
   /// The SIOReader is not copy-able

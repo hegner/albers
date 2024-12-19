@@ -14,7 +14,6 @@ class CollectionIDTable {
 
 public:
   CollectionIDTable();
-  ~CollectionIDTable() = default;
 
   CollectionIDTable(const CollectionIDTable&) = delete;
   CollectionIDTable& operator=(const CollectionIDTable&) = delete;

@@ -30,7 +30,6 @@ namespace root_utils {
   /// get them from a TTree/TChain for every event.
   struct CollectionBranches {
     CollectionBranches() = default;
-    ~CollectionBranches() = default;
     CollectionBranches(const CollectionBranches&) = delete;
     CollectionBranches& operator=(const CollectionBranches&) = delete;
     CollectionBranches(CollectionBranches&&) = default;
@@ -51,7 +50,6 @@ namespace root_utils {
   template <typename T>
   struct ParamStorage {
     ParamStorage() = default;
-    ~ParamStorage() = default;
     ParamStorage(const ParamStorage&) = delete;
     ParamStorage& operator=(const ParamStorage&) = delete;
     ParamStorage(ParamStorage&&) = default;

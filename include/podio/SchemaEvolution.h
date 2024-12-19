@@ -61,7 +61,6 @@ public:
   SchemaEvolution& operator=(const SchemaEvolution&) = delete;
   SchemaEvolution(SchemaEvolution&&) = delete;
   SchemaEvolution& operator=(SchemaEvolution&&) = delete;
-  ~SchemaEvolution() = default;
 
   /// Mutable instance only used for the initial registration of functions
   /// during library loading

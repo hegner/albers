@@ -65,7 +65,6 @@ private:
 
   template<typename ValueT>
   struct Model final : Concept {
-    ~Model() = default;
     Model(ValueT value) : m_value(value) {}
 
     std::unique_ptr<Concept> clone() const final {
@@ -115,7 +114,6 @@ public:
     return *this;
   }
 
-  ~{{ class.bare_type }}() = default;
   {{ class.bare_type }}({{ class.bare_type }}&&) = default;
   {{ class.bare_type }}& operator=({{ class.bare_type }}&&) = default;
 

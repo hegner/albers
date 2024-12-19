@@ -86,7 +86,6 @@ public:
   UserDataCollection& operator=(const UserDataCollection&) = delete;
   UserDataCollection(UserDataCollection&&) = default;
   UserDataCollection& operator=(UserDataCollection&&) = default;
-  ~UserDataCollection() = default;
 
   /// The schema version of UserDataCollections
   static constexpr SchemaVersionT schemaVersion = 1;

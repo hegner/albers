@@ -66,8 +66,6 @@ public:
   GenericParameters(GenericParameters&&) = default;
   GenericParameters& operator=(GenericParameters&&) = default;
 
-  ~GenericParameters() = default;
-
   template <typename T>
   std::optional<T> get(const std::string& key) const;
 

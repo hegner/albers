@@ -42,8 +42,6 @@ private:
     ReaderModel(ReaderModel&&) = default;
     ReaderModel& operator=(ReaderModel&&) = default;
 
-    ~ReaderModel() = default;
-
     podio::Frame readNextFrame(const std::string& name) override {
       auto maybeFrame = m_reader->readNextEntry(name);
       if (maybeFrame) {
@@ -100,7 +98,6 @@ public:
   Reader& operator=(const Reader&) = delete;
   Reader(Reader&&) = default;
   Reader& operator=(Reader&&) = default;
-  ~Reader() = default;
 
   /// Read the next frame of a given category
   ///

@@ -33,8 +33,6 @@ class RNTupleReader {
 public:
   /// Create a RNTupleReader
   RNTupleReader() = default;
-  /// Destructor
-  ~RNTupleReader() = default;
   /// The RNTupleReader is not copy-able
   RNTupleReader(const RNTupleReader&) = delete;
   /// The RNTupleReader is not copy-able

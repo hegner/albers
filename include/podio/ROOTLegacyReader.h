@@ -46,9 +46,6 @@ class ROOTLegacyReader {
 public:
   /// Create a SIOLegacyReader
   ROOTLegacyReader() = default;
-  /// Destructor
-  ~ROOTLegacyReader() = default;
-
   /// The SIOLegacyReader is not copy-able
   ROOTLegacyReader(const ROOTLegacyReader&) = delete;
   /// The SIOLegacyReader is not copy-able

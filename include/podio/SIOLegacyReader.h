@@ -28,9 +28,6 @@ class SIOLegacyReader {
 public:
   /// Create a SIOLegacyReader
   SIOLegacyReader();
-  /// Destructor
-  ~SIOLegacyReader() = default;
-
   /// The SIOLegacyReader is not copy-able
   SIOLegacyReader(const SIOLegacyReader&) = delete;
   /// The SIOLegacyReader is not copy-able

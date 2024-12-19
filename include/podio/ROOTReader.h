@@ -45,9 +45,6 @@ class ROOTReader {
 public:
   /// Create a ROOTReader
   ROOTReader() = default;
-  /// Destructor
-  ~ROOTReader() = default;
-
   /// The ROOTReader is not copy-able
   ROOTReader(const ROOTReader&) = delete;
   /// The ROOTReader is not copy-able

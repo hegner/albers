@@ -107,9 +107,6 @@ public:
     return {nullptr};
   }
 
-  /// Destructor
-  ~LinkT() = default;
-
   /// Get the weight of the link
   float getWeight() const {
     return m_obj->data.weight;

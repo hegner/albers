@@ -55,7 +55,6 @@ public:
   // Mutable instance only used for the initial registration!
   static DatamodelRegistry& mutInstance();
 
-  ~DatamodelRegistry() = default;
   DatamodelRegistry(const DatamodelRegistry&) = delete;
   DatamodelRegistry& operator=(const DatamodelRegistry&) = delete;
   DatamodelRegistry(DatamodelRegistry&&) = delete;

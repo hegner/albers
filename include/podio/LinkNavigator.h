@@ -67,7 +67,6 @@ public:
   LinkNavigator& operator=(const LinkNavigator&) = default;
   LinkNavigator(LinkNavigator&&) = default;
   LinkNavigator& operator=(LinkNavigator&&) = default;
-  ~LinkNavigator() = default;
 
   /// Get all the *From* objects and weights that have links with the passed
   /// object

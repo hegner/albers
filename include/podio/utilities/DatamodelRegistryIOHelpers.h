@@ -44,7 +44,6 @@ public:
   }
 
   DatamodelDefinitionHolder() = default;
-  ~DatamodelDefinitionHolder() = default;
   DatamodelDefinitionHolder(const DatamodelDefinitionHolder&) = delete;
   DatamodelDefinitionHolder& operator=(const DatamodelDefinitionHolder&) = delete;
   DatamodelDefinitionHolder(DatamodelDefinitionHolder&&) = default;
