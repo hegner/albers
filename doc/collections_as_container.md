@@ -93,8 +93,8 @@ In the following tables a convention from `Collection` is used: `iterator` stand
 | `std::random_access_iterator` | ✔️ yes | ✔️ yes |
 | `std::contiguous_iterator` | ❌ no | ❌ no |
 
-> [!NOTE]  
->The collections' iterators fulfil the `std::forward_iterator` except that the pointers obtained with `->` remain valid only as long as the iterator is valid instead of as long as the range remain valid. In practice this means a `ptr` obtained with `auto* ptr = it.operator->();` is valid only as long as `it` is valid. 
+> [!NOTE]
+>The collections' iterators fulfil the `std::forward_iterator` except that the pointers obtained with `->` remain valid only as long as the iterator is valid instead of as long as the range remain valid. In practice this means a `ptr` obtained with `auto* ptr = it.operator->();` is valid only as long as `it` is valid.
 >The values obtained immediately through `->` (for instance `auto& e = it->energy();`) behaves as expected for `std::forward_iterator` as their validity is tied to the validity of a collection.
 
 ### LegacyIterator

@@ -745,10 +745,10 @@ TEST_CASE("Collection and unsupported iterator concepts", "[collection][containe
   DOCUMENTED_STATIC_FAILURE(std::output_iterator<const_iterator, CollectionType::mutable_type>);
   // std::contiguous_iterator
   DOCUMENTED_STATIC_FAILURE(std::is_lvalue_reference_v<iterator::reference>);
-  DOCUMENTED_STATIC_FAILURE(std::same_as<iterator::value_type, std::remove_cvref_t<iterator::reference>>); 
+  DOCUMENTED_STATIC_FAILURE(std::same_as<iterator::value_type, std::remove_cvref_t<iterator::reference>>);
   DOCUMENTED_STATIC_FAILURE(std::contiguous_iterator<iterator>);
   DOCUMENTED_STATIC_FAILURE(std::is_lvalue_reference_v<const_iterator::reference>);
-  STATIC_REQUIRE(std::same_as<const_iterator::value_type, std::remove_cvref_t<const_iterator::reference>>); 
+  STATIC_REQUIRE(std::same_as<const_iterator::value_type, std::remove_cvref_t<const_iterator::reference>>);
   DOCUMENTED_STATIC_FAILURE(std::contiguous_iterator<const_iterator>);
 }
 
