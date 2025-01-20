@@ -1459,18 +1459,21 @@ TEST_CASE("Collection and unsupported std ranges algorithms", "[collection][rang
   DOCUMENTED_STATIC_FAILURE(is_range_fillable<CollectionType>);
 }
 
-TEST_CASE("LinkCollectionIterator and iterator concepts", "[links][iterator][std]") {
+TEST_CASE("LinkCollectionIterator and iterator concepts", "[links][ranges][std]") {
   using link_iterator = podio::LinkCollectionIteratorT<ExampleHit, ExampleHit, true>;
   using link_const_iterator = podio::LinkCollectionIteratorT<ExampleHit, ExampleHit, false>;
 
   STATIC_REQUIRE(std::input_iterator<link_iterator>);
   STATIC_REQUIRE(std::input_iterator<link_const_iterator>);
+  STATIC_REQUIRE(std::forward_iterator<link_iterator>);
+  STATIC_REQUIRE(std::forward_iterator<link_const_iterator>);
 }
 
 TEST_CASE("LinkCollection and range concepts", "[links][iterator][std]") {
   using link_collection = podio::LinkCollection<ExampleHit, ExampleHit>;
 
   STATIC_REQUIRE(std::ranges::input_range<link_collection>);
+  STATIC_REQUIRE(std::ranges::forward_range<link_collection>);
   STATIC_REQUIRE(std::ranges::sized_range<link_collection>);
   STATIC_REQUIRE(std::ranges::common_range<link_collection>);
   STATIC_REQUIRE(std::ranges::viewable_range<link_collection>);
