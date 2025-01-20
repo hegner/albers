@@ -1512,6 +1512,82 @@ TEST_CASE("LinkCollectionIterator and iterator concepts", "[links][ranges][std]"
       REQUIRE(++(--a) == b);
     }
   }
+  SECTION("random_access_iterator") {
+    STATIC_REQUIRE(std::random_access_iterator<link_iterator>);
+    {
+      auto coll = link_collection();
+      coll.create();
+      coll.create();
+      coll.create();
+      coll.create();
+      auto a = coll.begin();
+      auto n = 2;
+      auto b = a + n;
+      REQUIRE((a += n) == b);
+      a = coll.begin();
+      REQUIRE(std::addressof(a += n) == std::addressof(a));
+      a = coll.begin();
+      auto k = a + n;
+      REQUIRE(k == (a += n));
+      a = coll.begin();
+      REQUIRE((a + n) == (n + a));
+      auto x = 1;
+      auto y = 2;
+      REQUIRE((a + (x + y)) == ((a + x) + y));
+      REQUIRE((a + 0) == a);
+      b = a + n;
+      REQUIRE((--b) == (a + n - 1));
+      b = a + n;
+      REQUIRE((b += -n) == a);
+      b = a + n;
+      REQUIRE((b -= +n) == a);
+      b = a + n;
+      REQUIRE(std::addressof(b -= n) == std::addressof(b));
+      b = a + n;
+      k = b - n;
+      REQUIRE(k == (b -= n));
+      b = a + n;
+      REQUIRE(a[n] == *b);
+      REQUIRE(a <= b);
+    }
+    STATIC_REQUIRE(std::random_access_iterator<link_const_iterator>);
+    {
+      auto coll = link_collection();
+      coll.create();
+      coll.create();
+      coll.create();
+      coll.create();
+      auto a = coll.cbegin();
+      auto n = 2;
+      auto b = a + n;
+      REQUIRE((a += n) == b);
+      a = coll.cbegin();
+      REQUIRE(std::addressof(a += n) == std::addressof(a));
+      a = coll.cbegin();
+      auto k = a + n;
+      REQUIRE(k == (a += n));
+      a = coll.cbegin();
+      REQUIRE((a + n) == (n + a));
+      auto x = 1;
+      auto y = 2;
+      REQUIRE((a + (x + y)) == ((a + x) + y));
+      REQUIRE((a + 0) == a);
+      b = a + n;
+      REQUIRE((--b) == (a + n - 1));
+      b = a + n;
+      REQUIRE((b += -n) == a);
+      b = a + n;
+      REQUIRE((b -= +n) == a);
+      b = a + n;
+      REQUIRE(std::addressof(b -= n) == std::addressof(b));
+      b = a + n;
+      k = b - n;
+      REQUIRE(k == (b -= n));
+      b = a + n;
+      REQUIRE(a[n] == *b);
+      REQUIRE(a <= b);
+    }
+  }
 }
 
 TEST_CASE("LinkCollection and range concepts", "[links][iterator][std]") {
@@ -1520,6 +1596,7 @@ TEST_CASE("LinkCollection and range concepts", "[links][iterator][std]") {
   STATIC_REQUIRE(std::ranges::input_range<link_collection>);
   STATIC_REQUIRE(std::ranges::forward_range<link_collection>);
   STATIC_REQUIRE(std::ranges::bidirectional_range<link_collection>);
+  STATIC_REQUIRE(std::ranges::random_access_range<link_collection>);
   STATIC_REQUIRE(std::ranges::sized_range<link_collection>);
   STATIC_REQUIRE(std::ranges::common_range<link_collection>);
   STATIC_REQUIRE(std::ranges::viewable_range<link_collection>);
