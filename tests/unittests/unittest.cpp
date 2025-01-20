@@ -226,6 +226,25 @@ TEST_CASE("Reverse iterators", "[basics]") {
   REQUIRE((*--cit).energy() == 43);
 }
 
+TEST_CASE("UserDataCollection reverse iterators", "[basics]") {
+  auto coll = podio::UserDataCollection<int>();
+  coll.push_back(42);
+  coll.push_back(43);
+  auto it = std::rbegin(coll);
+  REQUIRE(*it == 43);
+  REQUIRE(*++it == 42);
+  REQUIRE(*--it == 43);
+  it = std::rend(coll);
+  REQUIRE(*--it == 42);
+  REQUIRE(*--it == 43);
+  auto cit = std::crbegin(coll);
+  REQUIRE(*cit == 43);
+  REQUIRE(*++cit == 42);
+  cit = std::crend(coll);
+  REQUIRE(*--cit == 42);
+  REQUIRE(*--cit == 43);
+}
+
 TEST_CASE("Notebook", "[basics]") {
   auto hits = ExampleHitCollection();
   for (unsigned i = 0; i < 12; ++i) {

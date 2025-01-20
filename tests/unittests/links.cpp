@@ -462,6 +462,19 @@ TEST_CASE("Links with interfaces", "[links][interface-types]") {
   REQUIRE(link.get<ExampleCluster>() == cluster);
 }
 
+TEST_CASE("Links reverse iterators", "[links][iterator]") {
+  const auto [linkColl, hitColl, clusterColl] = createLinkCollections();
+  REQUIRE(linkColl.size() > 1);
+  auto it = --linkColl.rend();
+  REQUIRE(*it == *linkColl.begin());
+  it = linkColl.rbegin();
+  REQUIRE(*it == *--linkColl.end());
+  auto cit = --linkColl.rend();
+  REQUIRE(*cit == *linkColl.cbegin());
+  cit = linkColl.crbegin();
+  REQUIRE(*cit == *--linkColl.cend());
+}
+
 #ifdef PODIO_JSON_OUTPUT
 TEST_CASE("Link JSON conversion", "[links][json]") {
   const auto& [links, hits, clusters] = createLinkCollections();
