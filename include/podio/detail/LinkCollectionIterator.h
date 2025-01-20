@@ -19,7 +19,7 @@ public:
   using iterator_category = std::input_iterator_tag;
   // `std::forward_iterator` is supported except that the pointers obtained with `operator->()`
   // remain valid as long as the iterator is valid, not as long as the range is valid.
-  using iterator_concept = std::forward_iterator_tag;
+  using iterator_concept = std::bidirectional_iterator_tag;
 
   LinkCollectionIteratorT(size_t index, const LinkObjPointerContainer<FromT, ToT>* coll) :
       m_index(index), m_object(podio::utils::MaybeSharedPtr<LinkObjT>{nullptr}), m_collection(coll) {
@@ -56,6 +56,17 @@ public:
   LinkCollectionIteratorT operator++(int) {
     auto copy = *this;
     ++m_index;
+    return copy;
+  }
+
+  LinkCollectionIteratorT& operator--() {
+    --m_index;
+    return *this;
+  }
+
+  LinkCollectionIteratorT operator--(int) {
+    auto copy = *this;
+    --m_index;
     return copy;
   }
 

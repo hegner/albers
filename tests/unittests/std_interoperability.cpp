@@ -1462,11 +1462,56 @@ TEST_CASE("Collection and unsupported std ranges algorithms", "[collection][rang
 TEST_CASE("LinkCollectionIterator and iterator concepts", "[links][ranges][std]") {
   using link_iterator = podio::LinkCollectionIteratorT<ExampleHit, ExampleHit, true>;
   using link_const_iterator = podio::LinkCollectionIteratorT<ExampleHit, ExampleHit, false>;
+  using link_collection = podio::LinkCollection<ExampleHit, ExampleHit>;
 
   STATIC_REQUIRE(std::input_iterator<link_iterator>);
   STATIC_REQUIRE(std::input_iterator<link_const_iterator>);
   STATIC_REQUIRE(std::forward_iterator<link_iterator>);
   STATIC_REQUIRE(std::forward_iterator<link_const_iterator>);
+  SECTION("bidirectional_iterator") {
+    STATIC_REQUIRE(std::bidirectional_iterator<link_iterator>);
+    {
+      auto coll = link_collection();
+      coll.create();
+      auto a = ++coll.begin();
+      REQUIRE(std::addressof(--a) == std::addressof(a));
+      a = ++coll.begin();
+      auto b = ++coll.begin();
+      REQUIRE(a == b);
+      REQUIRE(a-- == b);
+      a = ++coll.begin();
+      REQUIRE(a == b);
+      a--;
+      --b;
+      REQUIRE(a == b);
+      a = ++coll.begin();
+      b = ++coll.begin();
+      REQUIRE(a == b);
+      REQUIRE(--(++a) == b);
+      REQUIRE(++(--a) == b);
+    }
+    STATIC_REQUIRE(std::bidirectional_iterator<link_const_iterator>);
+    {
+      auto coll = link_collection();
+      coll.create();
+      auto a = ++coll.cbegin();
+      REQUIRE(std::addressof(--a) == std::addressof(a));
+      a = ++coll.cbegin();
+      auto b = ++coll.cbegin();
+      REQUIRE(a == b);
+      REQUIRE(a-- == b);
+      a = ++coll.cbegin();
+      REQUIRE(a == b);
+      a--;
+      --b;
+      REQUIRE(a == b);
+      a = ++coll.cbegin();
+      b = ++coll.cbegin();
+      REQUIRE(a == b);
+      REQUIRE(--(++a) == b);
+      REQUIRE(++(--a) == b);
+    }
+  }
 }
 
 TEST_CASE("LinkCollection and range concepts", "[links][iterator][std]") {
@@ -1474,6 +1519,7 @@ TEST_CASE("LinkCollection and range concepts", "[links][iterator][std]") {
 
   STATIC_REQUIRE(std::ranges::input_range<link_collection>);
   STATIC_REQUIRE(std::ranges::forward_range<link_collection>);
+  STATIC_REQUIRE(std::ranges::bidirectional_range<link_collection>);
   STATIC_REQUIRE(std::ranges::sized_range<link_collection>);
   STATIC_REQUIRE(std::ranges::common_range<link_collection>);
   STATIC_REQUIRE(std::ranges::viewable_range<link_collection>);
