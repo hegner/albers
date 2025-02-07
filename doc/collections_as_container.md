@@ -89,13 +89,14 @@ In the following tables a convention from `Collection` is used: `iterator` stand
 | `std::input_iterator` | ✔️ yes | ✔️ yes |
 | `std::output_iterator` | ❌ no | ❌ no |
 | `std::forward_iterator` | ✔️ yes (see note below) | ✔️ yes (see note below) |
-| `std::bidirectional_iterator` | ✔️ yes | ✔️ yes |
-| `std::random_access_iterator` | ✔️ yes | ✔️ yes |
+| `std::bidirectional_iterator` | ✔️ yes (see note below) | ✔️ yes (see note below) |
+| `std::random_access_iterator` | ✔️ yes (see note below) | ✔️ yes (see note below) |
 | `std::contiguous_iterator` | ❌ no | ❌ no |
 
-> [!NOTE]
->The collections' iterators fulfil the `std::forward_iterator` except that the pointers obtained with `->` remain valid only as long as the iterator is valid instead of as long as the range remain valid. In practice this means a `ptr` obtained with `auto* ptr = it.operator->();` is valid only as long as `it` is valid.
->The values obtained immediately through `->` (for instance `auto& e = it->energy();`) behaves as expected for `std::forward_iterator` as their validity is tied to the validity of a collection.
+:::{note}
+The collections' iterators fulfil the `std::forward_iterator` except that the pointers obtained with `->` remain valid only as long as the iterator is valid instead of as long as the range remain valid. In practice this means a `ptr` obtained with `auto* ptr = it.operator->();` is valid only as long as `it` is valid.
+The values obtained immediately through `->` (for instance `auto& e = it->energy();`) behaves as expected for `std::forward_iterator` as their validity is tied to the validity of a collection.
+:::
 
 ### LegacyIterator
 
@@ -207,7 +208,7 @@ std::fill(std::begin(collection), std::end(collection), value ); // requires For
 std::sort(std::begin(collection), std::end(collection)); // requires RandomAccessIterator and Swappable -> might compile, wrong result
 ```
 
-## Standard range algorithms
+## Collection and standard range algorithms
 
 The arguments of standard range algorithms are checked at compile time and must fulfil certain iterator concepts, such as `std::input_iterator` or `std::ranges::input_range`.
 
