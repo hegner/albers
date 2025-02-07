@@ -507,10 +507,12 @@ TEST_CASE("Collection and iterator concepts", "[collection][container][iterator]
       coll.create();
       auto i = coll.begin();
       auto j = coll.begin();
+      // multi-pass guarantee
       REQUIRE(i == j);
       REQUIRE(++i == ++j);
       i = coll.begin();
-      REQUIRE(((void)[](auto x) { ++x; }(i), *i) == *i);
+      REQUIRE(*i == ((void)[](auto x) { ++x; }(i), *i)); // iterating copy doesn't cause side effects that affect the
+                                                         // original iterator
     }
     // const_iterator
     STATIC_REQUIRE(std::forward_iterator<const_iterator>);
@@ -520,10 +522,12 @@ TEST_CASE("Collection and iterator concepts", "[collection][container][iterator]
       coll.create();
       auto i = coll.cbegin();
       auto j = coll.cbegin();
+      // multi-pass guarantee
       REQUIRE(i == j);
       REQUIRE(++i == ++j);
       i = coll.cbegin();
-      REQUIRE(((void)[](auto x) { ++x; }(i), *i) == *i);
+      REQUIRE(*i == ((void)[](auto x) { ++x; }(i), *i)); // iterating copy doesn't cause side effects that affect the
+                                                         // original iterator
     }
   }
 
