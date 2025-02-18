@@ -1,0 +1,79 @@
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version" id="current-version-span">
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <script>
+        document.getElementById("current-version-span").insertAdjacentText('afterbegin', `Version: ${window.location.href.split('/').at(-2)}`)
+    </script>
+
+    <div class="rst-other-versions" id="other-versions-div">
+    </div>
+    <script>
+        /** Parse all available versions from the directory listing content
+         */
+        function getAvailableVersions(contents) {
+            // Take a DOMParser to get to the links
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(contents, 'text/html');
+
+            let links = doc.querySelectorAll('a');
+            let availableVersions = [];
+            links.forEach(link => {
+                let href = link.getAttribute('href');
+                if (href.endsWith('/') && !href.startsWith('/')) {
+                    availableVersions.push(link.textContent.replace(/\/$/, ''));
+                }
+            });
+
+            return availableVersions;
+        }
+
+        /** Sort versions in descending order, ordering "non-versions" to the top
+         */
+        function sortVersions(v1, v2) {
+            const rgx = /^v(\d+)-(\d+)(?:-(\d+))?$/
+            const m1 = v1.match(rgx);
+            const m2 = v2.match(rgx);
+
+            // If only one matches, that has to go down, otherwise we keep the order
+            if (!m1 && m2) return -1;
+            if (m1 && !m2) return 1;
+            if (!m1 && !m2) return 0;
+
+            const intV1 = parseInt(m1[1], 10) * 10000 + parseInt(m1[2], 10) * 100 + parseInt(m1[3] || 0, 10);
+            const intV2 = parseInt(m2[1], 10) * 10000 + parseInt(m2[2], 10) * 100 + parseInt(m2[3] || 0, 10);
+
+            return intV2 - intV1;
+        }
+
+        const other_versions = document.getElementById("other-versions-div");
+        other_versions.innerHTML = '';
+
+        // Dynamically determine the versions by checking the directory one
+        // level up and populate the version list from there
+        const baseUrl = window.location.href.split('/').slice(0, -2).join('/');
+        fetch(baseUrl)
+            .then(response => response.text())
+            .then(contents => {
+                const availableVersions = getAvailableVersions(contents);
+
+                availableVersions.sort(sortVersions);
+
+                const versionList = document.createElement("dl");
+                const header = document.createElement("dt");
+                header.textContent = "Versions";
+                versionList.appendChild(header)
+
+                availableVersions.forEach(v => {
+                    const vElem = document.createElement("dd");
+                    const vLink = document.createElement("a");
+                    vLink.href = `${baseUrl}/${v}`;
+                    vLink.textContent = v;
+                    vElem.appendChild(vLink);
+                    versionList.appendChild(vElem);
+                });
+
+                other_versions.appendChild(versionList);
+            });
+    </script>
+</div>

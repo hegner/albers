@@ -48,7 +48,7 @@ generate-docs:
 # CI_OUTPUT_DIR: doc_output
 # EOS_ACCOUNT_PASSWORD: xxx
 # EOS_ACCOUNT_USERNAME: xxx
-# EOS_PATH: /eos/project/k/key4hep/www/key4hep/podio
+# EOS_DEPLOY_BASE_PATH: /eos/project/k/key4hep/www/key4hep/podio
 # METHOD: rsync
 # are set in the repository https://gitlab.cern.ch/key4hep/podio,
 # which mirrors https://github.com/AIDASoft/podio
@@ -62,13 +62,18 @@ deployment:
   only:
     refs:
       - master
+      - versioned-docs
+      - /^v\d+-\d+-?\d+?$/
   # need the doxygen artifacts for this step
   dependencies:
     - generate-docs
   stage: deploy
+
   # see see https://gitlab.cern.ch/ci-tools/ci-web-deployer
   image: gitlab-registry.cern.ch/ci-tools/ci-web-deployer:latest
+  before_script:
+    - if [ -z "$CI_COMMIT_BRANCH" ]; then TARGET_DEPLOY_DIR=$CI_COMMIT_TAG; else TARGET_DEPLOY_DIR=$CI_COMMIT_BRANCH; fi
+    - export EOS_PATH=$EOS_DEPLOY_BASE_PATH/_contents/$TARGET_DEPLOY_DIR
   script:
     - deploy-eos
-  before_script: []
   after_script: []
