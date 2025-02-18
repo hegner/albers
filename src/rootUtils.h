@@ -258,7 +258,7 @@ inline void readBranchesData(const CollectionBranches& branches, Long64_t entry)
  * collections
  */
 inline auto reconstructCollectionInfo(TTree* eventTree, podio::CollectionIDTable const& idTable) {
-  std::vector<CollectionWriteInfoT> collInfo;
+  std::vector<CollectionWriteInfo> collInfo;
 
   for (size_t iColl = 0; iColl < idTable.names().size(); ++iColl) {
     const auto collID = idTable.ids()[iColl];

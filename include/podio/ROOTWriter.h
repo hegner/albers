@@ -105,7 +105,7 @@ private:
   struct CategoryInfo {
     TTree* tree{nullptr};                                     ///< The TTree to which this category is written
     std::vector<root_utils::CollectionBranches> branches{};   ///< The branches for this category
-    std::vector<root_utils::CollectionWriteInfoT> collInfo{}; ///< Collection info for this category
+    std::vector<root_utils::CollectionWriteInfo> collInfo{}; ///< Collection info for this category
     podio::CollectionIDTable idTable{};                       ///< The collection id table for this category
     std::vector<std::string> collsToWrite{};                  ///< The collections to write for this category
 

@@ -116,7 +116,7 @@ public:
 private:
   std::pair<TTree*, unsigned> getLocalTreeAndEntry(const std::string& treename);
 
-  void createCollectionBranches(const std::vector<root_utils::CollectionWriteInfoT>& collInfo);
+  void createCollectionBranches(const std::vector<root_utils::CollectionWriteInfo>& collInfo);
 
   podio::GenericParameters readEventMetaData();
 

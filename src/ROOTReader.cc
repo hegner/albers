@@ -20,11 +20,11 @@ namespace podio {
 
 std::tuple<std::vector<root_utils::CollectionBranches>, std::vector<detail::NamedCollInfo>>
 createCollectionBranches(TChain* chain, const podio::CollectionIDTable& idTable,
-                         const std::vector<root_utils::CollectionWriteInfoT>& collInfo);
+                         const std::vector<root_utils::CollectionWriteInfo>& collInfo);
 
 std::tuple<std::vector<root_utils::CollectionBranches>, std::vector<detail::NamedCollInfo>>
 createCollectionBranchesIndexBased(TChain* chain, const podio::CollectionIDTable& idTable,
-                                   const std::vector<root_utils::CollectionWriteInfoT>& collInfo);
+                                   const std::vector<root_utils::CollectionWriteInfo>& collInfo);
 
 template <typename T>
 void ROOTReader::readParams(ROOTReader::CategoryInfo& catInfo, podio::GenericParameters& params, bool reloadBranches,
@@ -185,20 +185,33 @@ void ROOTReader::initCategory(CategoryInfo& catInfo, const std::string& category
 
   auto* collInfoBranch = root_utils::getBranch(m_metaChain.get(), root_utils::collInfoName(category));
 
-  auto collInfo = new std::vector<root_utils::CollectionWriteInfoT>();
-  if (m_fileVersion < podio::version::Version{0, 16, 4}) {
-    auto oldCollInfo = new std::vector<root_utils::CollectionInfoWithoutSchemaT>();
-    collInfoBranch->SetAddress(&oldCollInfo);
-    collInfoBranch->GetEntry(0);
-    collInfo->reserve(oldCollInfo->size());
-    for (auto&& [collID, collType, isSubsetColl] : *oldCollInfo) {
-      // Manually set the schema version to 1
-      collInfo->emplace_back(collID, std::move(collType), isSubsetColl, 1u);
-    }
-    delete oldCollInfo;
-  } else {
+  auto collInfo = new std::vector<root_utils::CollectionWriteInfo>();
+
+  if (m_fileVersion >= podio::version::Version{1, 1, 0}) {
     collInfoBranch->SetAddress(&collInfo);
     collInfoBranch->GetEntry(0);
+  } else {
+    auto collInfoOld = new std::vector<root_utils::CollectionWriteInfoT>();
+    if (m_fileVersion < podio::version::Version{0, 16, 4}) {
+      auto collInfoReallyOld = new std::vector<root_utils::CollectionInfoWithoutSchemaT>();
+      collInfoBranch->SetAddress(&collInfoReallyOld);
+      collInfoBranch->GetEntry(0);
+      collInfoOld->reserve(collInfoReallyOld->size());
+      for (auto& [collID, collType, isSubsetColl] : *collInfoReallyOld) {
+        // Manually set the schema version to 1
+        collInfo->emplace_back(collID, std::move(collType), isSubsetColl, 1u);
+      }
+      delete collInfoReallyOld;
+    } else {
+      collInfoBranch->SetAddress(&collInfoOld);
+      collInfoBranch->GetEntry(0);
+    }
+    // "Convert" to new style
+    collInfo->reserve(collInfoOld->size());
+    for (auto& [id, typeName, isSubsetColl, schemaVersion] : *collInfoOld) {
+      collInfo->emplace_back(id, std::move(typeName), isSubsetColl, schemaVersion);
+    }
+    delete collInfoOld;
   }
 
   // For backwards compatibility make it possible to read the index based files
@@ -325,7 +338,7 @@ std::vector<std::string_view> ROOTReader::getAvailableCategories() const {
 
 std::tuple<std::vector<root_utils::CollectionBranches>, std::vector<detail::NamedCollInfo>>
 createCollectionBranchesIndexBased(TChain* chain, const podio::CollectionIDTable& idTable,
-                                   const std::vector<root_utils::CollectionWriteInfoT>& collInfo) {
+                                   const std::vector<root_utils::CollectionWriteInfo>& collInfo) {
 
   size_t collectionIndex{0};
   std::vector<root_utils::CollectionBranches> collBranches;
@@ -377,7 +390,7 @@ createCollectionBranchesIndexBased(TChain* chain, const podio::CollectionIDTable
 
 std::tuple<std::vector<root_utils::CollectionBranches>, std::vector<detail::NamedCollInfo>>
 createCollectionBranches(TChain* chain, const podio::CollectionIDTable& idTable,
-                         const std::vector<root_utils::CollectionWriteInfoT>& collInfo) {
+                         const std::vector<root_utils::CollectionWriteInfo>& collInfo) {
 
   size_t collectionIndex{0};
   std::vector<root_utils::CollectionBranches> collBranches;

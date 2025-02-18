@@ -152,7 +152,12 @@ void ROOTLegacyReader::openFiles(const std::vector<std::string>& filenames) {
       collInfoBranch->SetAddress(&collectionInfo);
       collInfoBranch->GetEntry(0);
     }
-    createCollectionBranches(*collectionInfo);
+    std::vector<root_utils::CollectionWriteInfo> collInfo;
+    collInfo.reserve(collectionInfo->size());
+    for (auto& [id, typeName, isSubsetColl, schemaVersion] : *collectionInfo) {
+      collInfo.emplace_back(id, std::move(typeName), isSubsetColl, schemaVersion);
+    }
+    createCollectionBranches(collInfo);
     delete collectionInfo;
   } else {
     std::cout << "PODIO: Reconstructing CollectionTypeInfo branch from other sources in file: \'"
@@ -170,7 +175,7 @@ unsigned ROOTLegacyReader::getEntries(const std::string& name) const {
   return m_chain->GetEntries();
 }
 
-void ROOTLegacyReader::createCollectionBranches(const std::vector<root_utils::CollectionWriteInfoT>& collInfo) {
+void ROOTLegacyReader::createCollectionBranches(const std::vector<root_utils::CollectionWriteInfo>& collInfo) {
   size_t collectionIndex{0};
 
   for (const auto& [collID, collType, isSubsetColl, collSchemaVersion] : collInfo) {
