@@ -16,6 +16,8 @@
 #include "podio/utilities/MaybeSharedPtr.h"
 #include "podio/utilities/TypeHelpers.h"
 
+#include <iterator>
+
 #ifdef PODIO_JSON_OUTPUT
   #include "nlohmann/json.hpp"
 #endif
@@ -48,6 +50,8 @@ public:
   using iterator = LinkMutableCollectionIterator<FromT, ToT>;
   using difference_type = ptrdiff_t;
   using size_type = size_t;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+  using reverse_iterator = std::reverse_iterator<iterator>;
 
   LinkCollection() = default;
 
@@ -171,6 +175,25 @@ public:
   }
   iterator end() {
     return iterator(m_storage.entries.size(), &m_storage.entries);
+  }
+  // reverse iterators
+  reverse_iterator rbegin() {
+    return reverse_iterator(end());
+  }
+  const_reverse_iterator rbegin() const {
+    return const_reverse_iterator(end());
+  }
+  const_reverse_iterator crbegin() const {
+    return rbegin();
+  }
+  reverse_iterator rend() {
+    return reverse_iterator(begin());
+  }
+  const_reverse_iterator rend() const {
+    return const_reverse_iterator(begin());
+  }
+  const_reverse_iterator crend() const {
+    return rend();
   }
 
   bool isValid() const override {

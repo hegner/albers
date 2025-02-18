@@ -88,10 +88,16 @@ In the following tables a convention from `Collection` is used: `iterator` stand
 | `std::input_or_output_iterator` | ✔️ yes | ✔️ yes |
 | `std::input_iterator` | ✔️ yes | ✔️ yes |
 | `std::output_iterator` | ❌ no | ❌ no |
-| `std::forward_iterator` | ❌ no | ❌ no |
-| `std::bidirectional_iterator` | ❌ no | ❌ no |
-| `std::random_access_iterator` | ❌ no | ❌ no |
+| `std::forward_iterator` | ✔️ yes (see note below) | ✔️ yes (see note below) |
+| `std::bidirectional_iterator` | ✔️ yes (see note below) | ✔️ yes (see note below) |
+| `std::random_access_iterator` | ✔️ yes (see note below) | ✔️ yes (see note below) |
 | `std::contiguous_iterator` | ❌ no | ❌ no |
+
+:::{note}
+The collections' iterators fulfil the `std::forward_iterator` except that the pointers obtained with `->` remain valid only as long as the iterator itself is valid instead of as long as the range remains valid. In practice, this means a `ptr` obtained with `auto* ptr = it.operator->();` is valid only as long as `it` is valid.
+The values obtained immediately through `->` (for instance, `auto& e = it->energy();`) behave as expected for `std::forward_iterator`, as their validity is tied to the collection's validity.
+Despite the exception, the collection iterators are made to still report themselves as fulfilling the forward iterator requirements since the problematic usage (`auto* ptr = it.operator->();`) is rare in normal scenarios.
+:::
 
 ### LegacyIterator
 
@@ -162,7 +168,7 @@ In addition to the *LegacyForwardIterator* the C++ standard specifies also the *
 
 | Adaptor | Compatible with Collection? | Comment |
 |---------|-----------------------------|---------|
-| `std::reverse_iterator` | ❌ no | `iterator` and `const_iterator` not *LegacyBidirectionalIterator* or `std::bidirectional_iterator` |
+| `std::reverse_iterator` | ❗ attention | `operator->` not defined as `iterator`'s and `const_iterator`'s `operator->` are non-`const` |
 | `std::back_insert_iterator` | ❗ attention | Compatible only with SubsetCollections, otherwise throws `std::invalid_argument` |
 | `std::front_insert_iterator` | ❌ no | `push_front` not defined |
 | `std::insert_iterator` | ❌ no | `insert` not defined |
@@ -180,9 +186,9 @@ In addition to the *LegacyForwardIterator* the C++ standard specifies also the *
 | `std::ranges::sized_range` | ✔️ yes |
 | `std::ranges::input_range` | ✔️ yes |
 | `std::ranges::output_range` | ❌ no |
-| `std::ranges::forward_range` | ❌ no |
-| `std::ranges::bidirectional_range` | ❌ no |
-| `std::ranges::random_access_range` | ❌ no |
+| `std::ranges::forward_range` | ✔️ yes |
+| `std::ranges::bidirectional_range` | ✔️ yes |
+| `std::ranges::random_access_range` | ✔️ yes |
 | `std::ranges::contiguous_range` | ❌ no |
 | `std::ranges::common_range` | ✔️ yes |
 | `std::ranges::viewable_range` | ✔️ yes |
@@ -203,20 +209,21 @@ std::fill(std::begin(collection), std::end(collection), value ); // requires For
 std::sort(std::begin(collection), std::end(collection)); // requires RandomAccessIterator and Swappable -> might compile, wrong result
 ```
 
-## Standard range algorithms
+## Collection and standard range algorithms
 
 The arguments of standard range algorithms are checked at compile time and must fulfil certain iterator concepts, such as `std::input_iterator` or `std::ranges::input_range`.
 
-The iterators of PODIO collections model the `std::input_iterator` concept, so range algorithms that require this iterator type will work correctly with PODIO iterators. If an algorithm compiles, it is guaranteed to work as expected.
+The iterators of PODIO collections model the `std::random_access_iterator` concept, so range algorithms that require this iterator type will work correctly with PODIO iterators. If an algorithm compiles, it is guaranteed to work as expected.
 
 In particular, the PODIO collections' iterators do not fulfil the `std::output_iterator` concept, and as a result, mutating algorithms relying on this iterator type will not compile.
 
-Similarly the collections themselves model the `std::input_range` concept and can be used in the range algorithms that require that concept. The algorithms requiring unsupported range concept, such as `std::output_range`, won't compile.
+Similarly the collections themselves model the `std::random_access_range` concept and can be used in the range algorithms that require that concept. The algorithms requiring unsupported range concept, such as `std::output_range`, won't compile.
 
 For example:
 ```c++
 std::ranges::find_if(collection, predicate ); // requires input_range -> OK
-std::ranges::adjacent_find(collection, predicate ); // requires forward_range -> won't compile
+std::ranges::adjacent_find(collection, predicate ); // requires forward_range -> OK
+std::ranges::views::reverse(collection); //requires bidirectional_range -> OK
 std::ranges::fill(collection, value ); // requires output_range -> won't compile
 std::ranges::sort(collection); // requires random_access_range and sortable -> won't compile
 ```

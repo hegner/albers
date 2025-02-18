@@ -81,6 +81,8 @@ public:
   using iterator = typename std::vector<BasicType>::iterator;
   using difference_type = typename std::vector<BasicType>::difference_type;
   using size_type = typename std::vector<BasicType>::size_type;
+  using const_reverse_iterator = typename std::vector<BasicType>::const_reverse_iterator;
+  using reverse_iterator = typename std::vector<BasicType>::reverse_iterator;
 
   UserDataCollection() = default;
   /// Constructor from an existing vector (which will be moved from!)
@@ -221,6 +223,25 @@ public:
   }
   const_iterator cend() const {
     return _vec.cend();
+  }
+  // reverse iterators
+  reverse_iterator rbegin() {
+    return _vec.rbegin();
+  }
+  const_reverse_iterator rbegin() const {
+    return _vec.rbegin();
+  }
+  const_reverse_iterator crbegin() const {
+    return _vec.crbegin();
+  }
+  reverse_iterator rend() {
+    return _vec.rend();
+  }
+  const_reverse_iterator rend() const {
+    return _vec.rend();
+  }
+  const_reverse_iterator crend() const {
+    return _vec.crend();
   }
 
   typename std::vector<BasicType>::reference operator[](size_t idx) {

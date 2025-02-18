@@ -8,7 +8,9 @@ public:
   using reference = {{ prefix }}{{ class.bare_type }};
   using pointer = {{ prefix }}{{ class.bare_type }}*;
   using iterator_category = std::input_iterator_tag;
-  using iterator_concept = std::input_iterator_tag;
+  // `std::forward_iterator` is supported except that the pointers obtained with `operator->()`
+  // remain valid as long as the iterator is valid, not as long as the range is valid.
+  using iterator_concept = std::random_access_iterator_tag;
 
   {{ iterator_type }}(size_t index, const {{ class.bare_type }}ObjPointerContainer* collection) : m_index(index), m_object({{ ptr_init }}), m_collection(collection) {}
   {{ iterator_type }}() = default;
@@ -19,8 +21,8 @@ public:
   {{ iterator_type }}& operator=({{iterator_type}}&&) = default;
   ~{{ iterator_type }}() = default;
 
-  bool operator!=(const {{ iterator_type}}& x) const {
-    return m_index != x.m_index;
+  auto operator<=>(const {{ iterator_type}}& other) const {
+    return m_index <=> other.m_index;
   }
 
   bool operator==(const {{ iterator_type }}& x) const {
@@ -31,6 +33,15 @@ public:
   pointer operator->();
   {{ iterator_type }}& operator++();
   {{ iterator_type }} operator++(int);
+  {{ iterator_type }}& operator--();
+  {{ iterator_type }} operator--(int);
+  {{ iterator_type }}& operator+=(difference_type n);
+  {{ iterator_type }} operator+(difference_type n) const;
+  friend {{ iterator_type }} operator+(difference_type n, const {{ iterator_type }}& it);
+  {{ iterator_type }}& operator-=(difference_type n);
+  {{ iterator_type }} operator-(difference_type n) const;
+  reference operator[](difference_type n) const;
+  difference_type operator-(const {{ iterator_type }}& other) const;
 
 private:
   size_t m_index{0};
@@ -62,6 +73,51 @@ private:
   auto copy = *this;
   ++m_index;
   return copy;
+}
+
+{{ iterator_type }}& {{ iterator_type }}::operator--() {
+  --m_index;
+  return *this;
+}
+
+{{ iterator_type }} {{ iterator_type }}::operator--(int) {
+  auto copy = *this;
+  --m_index;
+  return copy;
+}
+
+{{ iterator_type }}& {{ iterator_type }}::operator+=(difference_type n) {
+  m_index += n;
+  return *this;
+}
+
+{{ iterator_type }} {{ iterator_type }}::operator+(difference_type n) const {
+  auto copy = *this;
+  copy += n;
+  return copy;
+}
+
+{{ iterator_type }} operator+({{ iterator_type }}::difference_type n, const {{ iterator_type }}& it) {
+    return it + n;
+}
+
+{{ iterator_type }}& {{ iterator_type }}::operator-=(difference_type n) {
+  m_index -= n;
+  return *this;
+}
+
+{{ iterator_type }} {{ iterator_type }}::operator-(difference_type n) const {
+  auto copy = *this;
+  copy -= n;
+  return copy;
+}
+
+{{ iterator_type }}::reference {{ iterator_type }}::operator[](difference_type n) const {
+  return reference{ {{ ptr_type }}((*m_collection)[m_index + n]) };
+}
+
+{{ iterator_type }}::difference_type {{ iterator_type }}::operator-(const {{ iterator_type }}& other) const {
+    return m_index - other.m_index;
 }
 
 {% endwith %}
