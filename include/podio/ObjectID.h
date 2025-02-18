@@ -2,6 +2,7 @@
 #define PODIO_OBJECTID_H
 
 #include <cstdint>
+#include <functional>
 #include <iomanip>
 #include <ostream>
 
@@ -48,5 +49,17 @@ inline void to_json(nlohmann::json& j, const podio::ObjectID& id) {
 #endif
 
 } // namespace podio
+
+template<>
+struct std::hash<podio::ObjectID>
+{
+    std::size_t operator()(const podio::ObjectID& id) const noexcept
+    {
+        auto hash_collectionID = std::hash<uint32_t>{}(id.collectionID);
+        auto hash_index = std::hash<int>{}(id.index);
+
+        return hash_collectionID ^ hash_index;
+    }
+};
 
 #endif
